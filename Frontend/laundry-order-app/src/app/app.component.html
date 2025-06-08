@@ -1,0 +1,46 @@
+<div class="main-container"><!-- Navigation moderne -->
+<div *ngIf="currentUser" class="modern-navbar">
+    <div class="navbar-content">
+        <!-- Logo et titre -->
+        <div class="navbar-brand">
+            <img src="assets/logo.svg" height="32" alt="Logo Blanchisserie" class="brand-logo" />
+            <div class="brand-text">
+                <span class="brand-title">LaundryPro</span>
+                <span class="brand-subtitle">Gestion de commandes</span>
+            </div>
+        </div>
+
+        <!-- Menu principal -->
+        <div class="navbar-menu">
+            <p-menubar [model]="items" class="custom-menubar">
+            </p-menubar>
+        </div>
+
+        <!-- Section utilisateur -->
+        <div class="navbar-user">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="pi pi-user"></i>
+                </div>
+                <div class="user-details">
+                    <span class="user-name">{{currentUser.userName}}</span>
+                    <span class="user-role" *ngIf="authService.isAdmin()">Administrateur</span>
+                    <span class="user-role" *ngIf="!authService.isAdmin()">Utilisateur</span>
+                </div>
+            </div>
+            <button pButton 
+                    class="p-button-text p-button-rounded logout-btn" 
+                    icon="pi pi-sign-out" 
+                    pTooltip="Déconnexion"
+                    tooltipPosition="bottom"
+                    (click)="logout()">
+            </button>
+        </div>
+    </div>
+</div>
+
+    <!-- Main content -->
+    <div class="content-container">
+        <router-outlet></router-outlet>
+    </div>
+</div>

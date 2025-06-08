@@ -1,0 +1,8 @@
+<!-- Favicon généré automatiquement -->
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <circle fill="#3F51B5" cx="8" cy="8" r="8"/>
+  <g transform="translate(4, 4)" fill="#FFFFFF">
+    <circle stroke="#FFFFFF" stroke-width="0.5" cx="4" cy="4" r="3.5"/>
+    <circle fill="#FFFFFF" cx="4" cy="4" r="1"/>
+  </g>
+</svg>

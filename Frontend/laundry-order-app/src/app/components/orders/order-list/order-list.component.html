@@ -1,0 +1,165 @@
+<div class="grid">
+    <p-toast></p-toast>
+
+    <div class="col-12">
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="flex justify-content-between align-items-center p-3">
+                    <h2 class="m-0">Mes Commandes</h2>
+                    <button pButton icon="pi pi-plus" label="Nouvelle Commande" (click)="newOrder()"></button>
+                </div>
+            </ng-template>
+
+            <p-table [value]="orders" [paginator]="true" [rows]="10" 
+                    [rowsPerPageOptions]="[5,10,25]" [loading]="loading"
+                    styleClass="p-datatable-sm" [responsive]="true">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Articles</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-order>                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.orderDate | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ (order.items?.length || 0) }} article(s)</td>
+                        <td>
+                            <p-tag [value]="getStatusLabel(order.status)" [severity]="getSeverity(order.status)"></p-tag>
+                        </td>
+                        <td>
+                            <button pButton icon="pi pi-eye" class="p-button-rounded p-button-text" 
+                                    (click)="showDetails(order)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            <p>Aucune commande trouvée</p>
+                            <button pButton icon="pi pi-plus" label="Créer une nouvelle commande" 
+                                    (click)="newOrder()"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-card>
+    </div>    <!-- Détails de la commande - Design moderne -->
+    <p-dialog [(visible)]="detailsVisible" 
+              [modal]="true" 
+              [style]="{width: '80vw', maxWidth: '900px'}" 
+              [draggable]="false" 
+              [resizable]="false"
+              [showHeader]="false"
+              styleClass="modern-order-dialog"
+              [contentStyle]="{'padding': '0', 'margin': '0'}">
+          <div *ngIf="selectedOrder" class="modern-dialog-content no-padding">
+            
+            <!-- Header moderne de la popup -->
+            <div class="dialog-header">
+                <div class="header-content">
+                    <div class="order-badge">
+                        <i class="pi pi-shopping-cart"></i>
+                        <div class="badge-text">
+                            <h2>Commande #{{ selectedOrder.id }}</h2>
+                            <span class="order-date">{{ selectedOrder.orderDate | date:'EEEE dd MMMM yyyy' }}</span>
+                        </div>
+                    </div>
+                    <button pButton 
+                            icon="pi pi-times" 
+                            class="p-button-text p-button-rounded close-btn" 
+                            (click)="detailsVisible = false"
+                            pTooltip="Fermer"
+                            tooltipPosition="left">
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statut moderne avec barre de progression -->
+            <div class="status-section">
+                <div class="status-card">
+                    <div class="status-icon" [style.color]="getStatusColor(selectedOrder.status)">
+                        <i [class]="getStatusIcon(selectedOrder.status)"></i>
+                    </div>
+                    <div class="status-details">
+                        <h3>{{ getStatusLabel(selectedOrder.status) }}</h3>
+                        <p>{{ getStatusDescription(selectedOrder.status) }}</p>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" [style.width.%]="getProgressPercentage(selectedOrder.status)"></div>
+                </div>
+            </div>
+
+            <!-- Contenu principal en grille -->
+            <div class="dialog-body">
+                
+                <!-- Section informations -->
+                <div class="info-section">
+                    <div class="section-header">
+                        <i class="pi pi-info-circle"></i>
+                        <h4>Informations générales</h4>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="label">Date de commande</span>
+                            <span class="value">{{ selectedOrder.orderDate | date:'dd/MM/yyyy à HH:mm' }}</span>
+                        </div>
+                        <div class="info-item" *ngIf="selectedOrder.reason">
+                            <span class="label">Motif</span>
+                            <span class="value">{{ selectedOrder.reason }}</span>
+                        </div>
+                        <div class="info-item full-width" *ngIf="selectedOrder.comment">
+                            <span class="label">Commentaire</span>
+                            <span class="value comment">{{ selectedOrder.comment }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section articles -->
+                <div class="articles-section">
+                    <div class="section-header">
+                        <i class="pi pi-shopping-bag"></i>
+                        <h4>Articles de blanchisserie</h4>
+                        <span class="item-count">{{ (selectedOrder.items?.length || 0) }}</span>
+                    </div>
+                    <div class="articles-grid">
+                        <div *ngFor="let item of selectedOrder.items || []" class="article-card">
+                            <div class="article-icon">
+                                <i class="pi pi-tag"></i>
+                            </div>                            <div class="article-details">
+                                <span class="article-name">{{ item.name }}</span>
+                                <div class="article-info">
+                                    <span class="article-quantity">Quantité: {{ item.quantity }}</span>
+                                    <span class="article-price" *ngIf="item.price">{{ item.price | currency:'EUR':'symbol':'1.2-2' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="!selectedOrder.items || selectedOrder.items.length === 0" class="empty-articles">
+                        <i class="pi pi-inbox"></i>
+                        <p>Aucun article dans cette commande</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer avec actions -->
+            <div class="dialog-footer">
+                <button pButton 
+                        label="Fermer" 
+                        icon="pi pi-times" 
+                        class="p-button-outlined close-button" 
+                        (click)="detailsVisible = false">
+                </button>
+                <button pButton 
+                        label="Imprimer" 
+                        icon="pi pi-print" 
+                        class="p-button-secondary print-button"
+                        (click)="printOrder()">
+                </button>
+            </div>
+        </div>
+    </p-dialog>
+</div>

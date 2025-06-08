@@ -1,0 +1,63 @@
+<div class="login-container">
+    <p-toast></p-toast>
+    
+    <!-- Éléments décoratifs en arrière-plan -->
+    <div class="background-decoration"></div>
+    
+    <div class="login-card">
+        <div class="logo-container">
+            <img src="assets/logo.svg" alt="Logo Blanchisserie" class="logo" />
+        </div>
+        
+        <div class="text-center mb-5">
+            <h1 class="welcome-title">Bienvenue</h1>
+            <p class="welcome-subtitle">Connectez-vous à votre compte blanchisserie</p>
+        </div>        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="mb-4">
+                <label for="username" class="form-label">Email</label>
+                <div class="p-input-wrapper">
+                    <input id="username" type="text" pInputText formControlName="username" class="w-full" />
+                </div>
+                <small class="p-error" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+                    Email requis
+                </small>
+            </div>
+
+            <div class="mb-4">
+                <label for="password" class="form-label">Mot de passe</label>
+                <div class="p-input-wrapper">
+                    <p-password id="password" formControlName="password" [toggleMask]="true" [feedback]="false" styleClass="w-full"></p-password>
+                </div>
+                <small class="p-error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                    Mot de passe requis
+                </small>
+            </div>            <div class="flex align-items-center justify-content-between mb-5">
+                <div class="flex align-items-center">
+                    <p-checkbox id="rememberme" [binary]="true" styleClass="mr-2"></p-checkbox>
+                    <label for="rememberme" class="remember-me">Se souvenir de moi</label>
+                </div>
+            </div>            <button pButton label="Se connecter" icon="pi pi-sign-in" class="w-full login-button p-button-rounded" [loading]="loading" [disabled]="loginForm.invalid"></button>
+            
+            <p-divider align="center" type="solid">
+                <span class="divider-text">ou</span>
+            </p-divider>
+            
+            <div class="text-center mt-3">
+                <a routerLink="/register" class="register-link">Pas encore de compte ? Inscrivez-vous</a>
+            </div>
+            
+            <div class="text-center mt-3">
+                <button pButton label="Créer un compte" icon="pi pi-user-plus" class="register-button p-button-outlined p-button-rounded" routerLink="/register"></button>
+            </div>
+        </form>
+        
+        <div class="footer-text">
+            <p>Service de Blanchisserie Professionnelle © 2025</p>
+            <div class="text-center mt-3">
+                <small class="text-primary">Utilisateurs de test: <br/>
+                Admin: admin&#64;example.com / Admin123! <br/>
+                Utilisateur: user&#64;example.com / User123!</small>
+            </div>
+        </div>
+    </div>
+</div>

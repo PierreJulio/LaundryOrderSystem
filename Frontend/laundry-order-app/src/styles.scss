@@ -1,0 +1,140 @@
+@use 'primeicons/primeicons.css';
+
+:root {
+    --laundry-blue: #3F51B5;
+    --laundry-blue-light: #7986CB;
+    --laundry-blue-dark: #303F9F;
+    --laundry-accent: #4CAF50;
+}
+
+html {
+    font-size: 14px;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Styles globaux */
+.welcome-title {
+    color: var(--laundry-blue-light);
+}
+
+.welcome-subtitle {
+    color: #6c757d;
+}
+
+/* Styles pour les formulaires */
+.form-label {
+    color: #495057;
+    font-weight: 600;
+}
+
+/* Amélioration des messages d'erreur */
+.p-error {
+    background-color: rgba(244, 67, 54, 0.08);
+    color: #d32f2f;
+    font-weight: 500;
+    border-left: 3px solid #f44336;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    width: fit-content;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Mise en forme des pages */
+.main-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content-container {
+    flex: 1;
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.card {
+    background: var(--surface-card);
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), 
+                0 1px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1),
+                0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+/* Boutons personnalisés */
+.p-button.laundry-button {
+    background-color: var(--laundry-blue);
+    border-color: var(--laundry-blue);
+    
+    &:hover:not(:disabled) {
+        background-color: var(--laundry-blue-dark);
+        border-color: var(--laundry-blue-dark);
+    }
+}
+
+/* Animations pour les transitions de page */
+.page-transition-enter {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.page-transition-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 300ms, transform 300ms;
+}
+
+/* Media queries pour la responsivité */
+@media screen and (max-width: 768px) {
+    html {
+        font-size: 13px;
+    }
+    
+    .content-container {
+        padding: 1rem;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    html {
+        font-size: 12px;
+    }
+    
+    .card {
+        padding: 1.5rem;
+    }
+}
+
+/* Règles globales pour les popups modernes */
+.modern-order-dialog .p-dialog-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.modern-order-dialog .p-dialog-content[data-pc-section="content"] {
+    padding: 0 !important;
+    margin: 0 !important;
+}

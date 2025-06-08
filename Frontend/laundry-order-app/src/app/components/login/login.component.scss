@@ -1,0 +1,278 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 1rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--surface-0, #ffffff) 0%, var(--surface-100, #f8f9fa) 100%);
+    overflow-y: auto;
+    z-index: 990;
+}
+
+.login-card {
+    background: var(--surface-card, white);
+    color: var(--text-color, #495057);    border-radius: var(--border-radius, 16px);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: var(--card-shadow, 0 10px 30px rgba(0, 0, 0, 0.15));
+    animation: fadeIn 1s ease-in-out;
+    border: 1px solid var(--surface-border, #dfe7ef);
+    position: relative;
+    z-index: 10;
+    margin: 2rem auto;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        background: linear-gradient(45deg, var(--primary-200, #C5CAE9), var(--primary-500, #3F51B5));
+        z-index: -1;
+        border-radius: var(--border-radius, 20px);
+        opacity: 0.2;
+        filter: blur(15px);
+    }
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.logo {
+    width: 120px;
+    height: 120px;
+    filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s ease, filter 0.3s ease;
+
+    &:hover {
+        transform: scale(1.05);
+        filter: drop-shadow(0px 6px 12px rgba(0, 0, 0, 0.2));
+    }
+}
+
+.welcome-title {
+    color: var(--primary-color, #3F51B5);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-family, 'Roboto', sans-serif);
+}
+
+.welcome-subtitle {
+    color: var(--text-color-secondary, #6c757d);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+:host ::ng-deep {
+    .p-password input {
+        width: 100%;
+    }
+    
+    .p-inputtext {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+    
+    .p-float-label label {
+        margin-left: 0.5rem;
+        color: var(--text-color, #495057);
+        font-weight: 500;
+    }    .p-divider {
+        margin: 1.5rem 0;
+        
+        &.p-divider-solid {
+            &:before {
+                border-top: 1px solid var(--surface-border, #dee2e6);
+                opacity: 0.3;
+            }
+        }
+        
+        .p-divider-content {
+            background-color: var(--surface-card, white);
+            border-radius: 50%;
+            height: 2rem;
+            width: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.05);
+            
+            .divider-text {
+                color: var(--text-color, #495057);
+                font-size: 0.875rem;
+                font-weight: 500;
+            }
+        }
+    }
+    
+    .login-button {
+        padding: 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        
+        &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        &:disabled {
+            opacity: 0.7;
+        }
+    }
+    
+    .register-button {
+        padding: 0.75rem;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 80%;
+        margin-top: 0.5rem;
+        
+        &:hover {
+            background-color: rgba(var(--primary-color-rgb, 63, 81, 181), 0.1);
+            transform: translateY(-2px);
+        }
+    }
+}
+
+.remember-me {
+    color: var(--text-color, #495057);
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.register-link {
+    color: var(--primary-color, #3F51B5);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+    
+    &:hover {
+        text-decoration: underline;
+        color: var(--primary-600, #3949AB);
+    }
+}
+
+/* Amélioration de la visibilité des messages d'erreur */
+.p-error {
+    font-weight: 500;
+    background-color: rgba(255, 59, 59, 0.1);
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    display: block;
+    margin-top: 0.5rem;
+    border-left: 3px solid var(--red-500, #f44336);
+    color: var(--red-700, #d32f2f);
+    font-size: 0.9rem;
+    width: fit-content;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Styles pour les labels au-dessus des champs */
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-color, #495057);
+    font-size: 0.95rem;
+}
+
+.p-input-wrapper {
+    margin-bottom: 0.5rem;
+    
+    /* S'assurer que le composant password prend toute la largeur */
+    ::ng-deep .p-password {
+        width: 100%;
+    }
+}
+
+/* Ajuster la marge des messages d'erreur */
+small.p-error {
+    margin-top: 0.5rem;
+    margin-bottom: 0.75rem;
+    display: block;
+    transition: all 0.3s ease;
+    animation: fadeInError 0.3s ease-in-out;
+}
+
+/* Animation pour les messages d'erreur */
+@keyframes fadeInError {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Styles pour le footer */
+.footer-text {
+    margin-top: 2rem;
+    text-align: center;
+    color: var(--text-color-secondary, #6c757d);
+    font-size: 0.9rem;
+}
+
+/* Animation pour l'apparition du formulaire */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Éléments décoratifs */
+.background-decoration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: 
+        radial-gradient(circle at 10% 10%, var(--primary-100, #C5CAE9) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, var(--primary-100, #C5CAE9) 0%, transparent 40%);
+    opacity: 0.6;
+}
+
+/* Media queries for responsiveness */
+@media screen and (max-width: 576px) {
+    .login-card {
+        padding: 2rem;
+    }
+    
+    .logo {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .welcome-title {
+        font-size: 2rem;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .login-card {
+        padding: 1.5rem;
+    }
+}

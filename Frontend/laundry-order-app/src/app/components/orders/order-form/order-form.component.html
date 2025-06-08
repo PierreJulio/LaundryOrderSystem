@@ -1,0 +1,126 @@
+<div class="grid">
+    <p-toast></p-toast>
+    <div class="col-12">
+        <p-card header="Nouvelle commande de blanchisserie">
+            <form [formGroup]="orderForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-3">
+                <div class="field">
+                    <label for="orderDate">Date de commande*</label>
+                    <p-calendar id="orderDate" formControlName="orderDate" [showIcon]="true" [required]="true" styleClass="w-full"></p-calendar>
+                    <small *ngIf="submitted && orderForm.get('orderDate')?.invalid" class="p-error">
+                        La date est requise
+                    </small>
+                </div>
+
+                <div class="field">
+                    <label for="customerName">Prénom du client*</label>
+                    <input id="customerName" type="text" pInputText formControlName="customerName" [required]="true" class="w-full" />
+                    <small *ngIf="submitted && orderForm.get('customerName')?.invalid" class="p-error">
+                        Le prénom est requis
+                    </small>
+                </div>
+
+                <div class="field">
+                    <label for="customerSurname">Nom du client*</label>
+                    <input id="customerSurname" type="text" pInputText formControlName="customerSurname" [required]="true" class="w-full" />
+                    <small *ngIf="submitted && orderForm.get('customerSurname')?.invalid" class="p-error">
+                        Le nom est requis
+                    </small>
+                </div>
+
+                <div class="field">
+                    <div class="flex justify-content-between align-items-center mb-2">
+                        <label>Articles*</label>
+                        <button pButton type="button" icon="pi pi-plus" label="Ajouter un article" 
+                            (click)="showAddItemDialog()" class="p-button-sm"></button>
+                    </div>
+                      <p-table [value]="items.controls" [responsive]="true" styleClass="p-datatable-sm">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Article</th>
+                                <th>Prix</th>
+                                <th>Description</th>
+                                <th>Quantité</th>
+                                <th>Actions</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-item let-i="rowIndex">
+                            <tr [formGroup]="item">
+                                <td>{{ item.get('name')?.value }}</td>
+                                <td>{{ item.get('price')?.value | currency:'EUR' }}</td>
+                                <td>{{ item.get('description')?.value }}</td>
+                                <td>{{ item.get('quantity')?.value }}</td>
+                                <td>
+                                    <button pButton type="button" icon="pi pi-trash" class="p-button-danger p-button-sm"
+                                        (click)="removeItem(i)"></button>
+                                </td>
+                            </tr>
+                        </ng-template>                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    Aucun article. Cliquez sur "Ajouter un article" pour commencer.
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <small *ngIf="submitted && items.length === 0" class="p-error">
+                        Au moins un article est requis
+                    </small>
+                </div>
+
+                <div class="field">
+                    <label for="reason">Motif (facultatif)</label>
+                    <textarea id="reason" pInputTextarea formControlName="reason" rows="3" class="w-full"></textarea>
+                </div>
+
+                <div class="field">
+                    <label for="comment">Commentaire (facultatif)</label>
+                    <textarea id="comment" pInputTextarea formControlName="comment" rows="3" class="w-full"></textarea>
+                </div>
+
+                <div class="field flex justify-content-end">
+                    <button pButton type="button" label="Annuler" class="p-button-outlined mr-2" 
+                        routerLink="/orders"></button>
+                    <button pButton type="submit" label="Soumettre la commande" 
+                        [loading]="loading" [disabled]="loading"></button>
+                </div>
+            </form>
+        </p-card>
+    </div>
+
+    <!-- Dialog for adding items -->
+    <p-dialog header="Ajouter un article" [(visible)]="showItemDialog" [modal]="true" 
+        [style]="{width: '450px'}" [draggable]="false" [resizable]="false">
+        <form [formGroup]="itemForm" class="flex flex-column gap-3">            <div class="field">
+                <label for="name">Nom de l'article*</label>
+                <input id="name" type="text" pInputText formControlName="name" class="w-full">
+                <small *ngIf="itemForm.get('name')?.invalid && itemForm.get('name')?.touched" class="p-error">
+                    Le nom de l'article est requis
+                </small>
+            </div>
+            <div class="field">
+                <label for="price">Prix*</label>
+                <input id="price" type="number" pInputText formControlName="price" min="0.01" step="0.01" class="w-full">
+                <small *ngIf="itemForm.get('price')?.invalid && itemForm.get('price')?.touched" class="p-error">
+                    Le prix doit être supérieur à 0
+                </small>
+            </div>
+            <div class="field">
+                <label for="description">Description</label>
+                <textarea id="description" pInputTextarea formControlName="description" rows="2" class="w-full"></textarea>
+            </div>
+            <div class="field">
+                <label for="quantity">Quantité*</label>
+                <input id="quantity" type="number" pInputText formControlName="quantity" min="1" class="w-full">
+                <small *ngIf="itemForm.get('quantity')?.invalid && itemForm.get('quantity')?.touched" class="p-error">
+                    La quantité doit être au moins 1
+                </small>
+            </div>
+        </form>
+        <ng-template pTemplate="footer">
+            <button pButton type="button" label="Annuler" icon="pi pi-times" class="p-button-text" 
+                (click)="showItemDialog = false"></button>
+            <button pButton type="button" label="Ajouter" icon="pi pi-check" 
+                [disabled]="itemForm.invalid" (click)="addItem()"></button>
+        </ng-template>
+    </p-dialog>
+</div>

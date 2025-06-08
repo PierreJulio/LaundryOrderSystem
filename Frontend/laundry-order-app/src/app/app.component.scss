@@ -1,0 +1,274 @@
+// filepath: c:\Pierre_Project\Test_Technique\LaundryOrderSystem\Frontend\laundry-order-app\src\app\app.component.scss
+:host {
+    display: block;
+    min-height: 100vh;
+}
+
+// Barre de navigation moderne
+.modern-navbar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    
+    .navbar-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1.5rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        gap: 2rem;
+    }
+    
+    // Section logo et titre
+    .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        min-width: 0;
+        
+        .brand-logo {
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            
+            &:hover {
+                transform: scale(1.1) rotate(5deg);
+            }
+        }
+        
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            
+            .brand-title {
+                font-size: 1.25rem;
+                font-weight: 700;
+                color: white;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+                letter-spacing: -0.025em;
+            }
+            
+            .brand-subtitle {
+                font-size: 0.75rem;
+                color: rgba(255, 255, 255, 0.8);
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+        }
+    }
+    
+    // Menu principal
+    .navbar-menu {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        
+        ::ng-deep .custom-menubar {
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            
+            .p-menubar-root-list {
+                gap: 0.5rem;
+                
+                > .p-menuitem {
+                    position: relative;
+                    
+                    > .p-menuitem-link {
+                        background: rgba(255, 255, 255, 0.1) !important;
+                        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+                        border-radius: 12px !important;
+                        padding: 0.75rem 1.25rem !important;
+                        color: white !important;
+                        font-weight: 500 !important;
+                        transition: all 0.3s ease !important;
+                        backdrop-filter: blur(10px);
+                        
+                        .p-menuitem-icon {
+                            color: white !important;
+                            margin-right: 0.5rem !important;
+                        }
+                        
+                        &:hover, &:focus {
+                            background: rgba(255, 255, 255, 0.2) !important;
+                            border-color: rgba(255, 255, 255, 0.4) !important;
+                            transform: translateY(-2px) !important;
+                            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2) !important;
+                        }
+                        
+                        &.p-menuitem-link-active {
+                            background: rgba(255, 255, 255, 0.25) !important;
+                            border-color: rgba(255, 255, 255, 0.5) !important;
+                        }
+                    }
+                    
+                    // Sous-menus
+                    .p-submenu-list {
+                        background: white !important;
+                        border: none !important;
+                        border-radius: 12px !important;
+                        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+                        margin-top: 0.5rem !important;
+                        padding: 0.5rem !important;
+                        
+                        .p-menuitem {
+                            .p-menuitem-link {
+                                color: #374151 !important;
+                                border-radius: 8px !important;
+                                padding: 0.75rem 1rem !important;
+                                margin-bottom: 0.25rem !important;
+                                transition: all 0.2s ease !important;
+                                
+                                .p-menuitem-icon {
+                                    color: #6b7280 !important;
+                                    margin-right: 0.5rem !important;
+                                }
+                                
+                                &:hover {
+                                    background: #f3f4f6 !important;
+                                    color: #1f2937 !important;
+                                    
+                                    .p-menuitem-icon {
+                                        color: #4f46e5 !important;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // Section utilisateur
+    .navbar-user {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.1rem;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+            }
+            
+            .user-details {
+                display: flex;
+                flex-direction: column;
+                
+                .user-name {
+                    font-weight: 600;
+                    color: white;
+                    font-size: 0.9rem;
+                }
+                
+                .user-role {
+                    font-size: 0.75rem;
+                    color: rgba(255, 255, 255, 0.8);
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                }
+            }
+        }
+        
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.2) !important;
+            border: 1px solid rgba(239, 68, 68, 0.3) !important;
+            color: white !important;
+            width: 40px !important;
+            height: 40px !important;
+            transition: all 0.3s ease !important;
+            
+            &:hover {
+                background: rgba(239, 68, 68, 0.3) !important;
+                border-color: rgba(239, 68, 68, 0.5) !important;
+                transform: scale(1.1) !important;
+            }
+        }
+    }
+    
+    // Responsive design
+    @media (max-width: 1024px) {
+        .navbar-content {
+            padding: 0.5rem 1rem;
+            gap: 1rem;
+        }
+        
+        .brand-text .brand-subtitle {
+            display: none;
+        }
+        
+        .user-details {
+            display: none;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .navbar-content {
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        
+        .navbar-menu {
+            order: 3;
+            width: 100%;
+            justify-content: flex-start;
+            
+            ::ng-deep .custom-menubar .p-menubar-root-list {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                
+                > .p-menuitem > .p-menuitem-link {
+                    padding: 0.5rem 0.75rem !important;
+                    font-size: 0.875rem !important;
+                }
+            }
+        }
+        
+        .user-info {
+            padding: 0.5rem;
+            
+            .user-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+        }
+    }
+}
+
+.content-container {
+    animation: fadeIn 0.5s ease;
+}
+
+/* Animation pour les transitions de page */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

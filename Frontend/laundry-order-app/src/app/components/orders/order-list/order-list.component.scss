@@ -1,0 +1,465 @@
+/* Styles pour la popup modernisée de détails de commande */
+
+// Variables CSS
+:root {
+  --dialog-border-radius: 16px;
+  --dialog-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --info-color: #3b82f6;
+}
+
+// Suppression forcée de tous les paddings et marges de PrimeNG Dialog - Règles multiples
+::ng-deep .modern-order-dialog {
+  .p-dialog-content,
+  .p-dialog-content > div {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+// Règle encore plus spécifique pour PrimeNG
+::ng-deep .p-dialog.modern-order-dialog .p-dialog-content {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+// Règle avec ID si nécessaire
+::ng-deep .modern-order-dialog .p-dialog-content[data-pc-section="content"] {
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box;
+}
+
+// Classe spécifique pour supprimer complètement le padding
+.no-padding {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+// Règle ciblant spécifiquement notre dialog content
+::ng-deep .modern-order-dialog {
+  .p-dialog-content.p-component {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+// Règles CSS ultra spécifiques pour éliminer le padding PrimeNG
+::ng-deep .p-dialog.modern-order-dialog .p-dialog-content.p-component {
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+::ng-deep .modern-order-dialog div[data-pc-section="content"] {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+::ng-deep .modern-order-dialog .p-dialog-content.ng-star-inserted {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+// Styles pour la dialog PrimeNG
+::ng-deep .modern-order-dialog {
+  .p-dialog {
+    border-radius: 24px; // Bords plus arrondis
+    box-shadow: var(--dialog-shadow);
+    border: none;
+    overflow: hidden;
+  }
+
+  .p-dialog-content {
+    padding: 0 !important; // Force le padding à zéro
+    margin: 0 !important; // Force la marge à zéro
+    border: none;
+    border-radius: 24px; // Assurer que le contenu suit les bords arrondis
+  }
+}
+
+// Contenu principal de la dialog
+.modern-dialog-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
+  margin: 0; // Pas de marge
+  padding: 0; // Pas de padding
+  // Header de la popup
+  .dialog-header {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 1.5rem; // Padding réduit
+    position: relative;
+    border-radius: 24px 24px 0 0; // Bords arrondis seulement en haut
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .order-badge {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      i {
+        font-size: 2rem;
+        opacity: 0.9;
+      }
+
+      .badge-text {
+        h2 {
+          margin: 0;
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
+
+        .order-date {
+          font-size: 0.9rem;
+          opacity: 0.8;
+          text-transform: capitalize;
+        }
+      }
+    }
+
+    .close-btn {
+      color: white !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2) !important;
+        transform: scale(1.05);
+      }
+    }
+  }
+  // Section statut avec barre de progression
+  .status-section {
+    padding: 1rem 1.5rem; // Padding réduit
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 1px solid var(--border-color);
+
+    .status-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+
+      .status-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+        i {
+          font-size: 1.5rem;
+          font-weight: bold;
+        }
+      }
+
+      .status-details {
+        h3 {
+          margin: 0;
+          color: var(--text-primary);
+          font-size: 1.1rem;
+          font-weight: 600;
+        }
+
+        p {
+          margin: 0.25rem 0 0 0;
+          color: var(--text-secondary);
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+
+      .progress-bar {
+        height: 100%;
+        background: var(--gradient-primary);
+        border-radius: 3px;
+        transition: width 0.5s ease;
+      }
+    }
+  }
+  // Corps de la dialog
+  .dialog-body {
+    padding: 1.5rem; // Padding réduit
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; // Gap réduit
+
+    // Section informations
+    .info-section {
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--border-color);
+
+        i {
+          color: var(--info-color);
+          font-size: 1.1rem;
+        }
+
+        h4 {
+          margin: 0;
+          color: var(--text-primary);
+          font-size: 1rem;
+          font-weight: 600;
+        }
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;        .info-item {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+          padding: 0.75rem; // Padding réduit
+          background: #f8fafc;
+          border-radius: 12px;
+          border: 1px solid var(--border-color);
+
+          &.full-width {
+            grid-column: 1 / -1;
+          }
+
+          .label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+
+          .value {
+            color: var(--text-primary);
+            font-weight: 500;
+
+            &.comment {
+              font-style: italic;
+              background: white;
+              padding: 0.75rem;
+              border-radius: 8px;
+              border: 1px solid var(--border-color);
+            }
+          }
+        }
+      }
+    }
+
+    // Section articles
+    .articles-section {
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--border-color);
+
+        i {
+          color: var(--success-color);
+          font-size: 1.1rem;
+        }
+
+        h4 {
+          margin: 0;
+          color: var(--text-primary);
+          font-size: 1rem;
+          font-weight: 600;
+          flex: 1;
+        }
+
+        .item-count {
+          background: var(--success-color);
+          color: white;
+          padding: 0.25rem 0.75rem;
+          border-radius: 20px;
+          font-size: 0.8rem;
+          font-weight: 600;
+        }
+      }
+
+      .articles-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1rem;        .article-card {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          padding: 0.75rem; // Padding réduit
+          background: white;
+          border: 1px solid var(--border-color);
+          border-radius: 12px;
+          transition: all 0.3s ease;
+
+          &:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+          }
+
+          .article-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            i {
+              color: white;
+              font-size: 1.1rem;
+            }
+          }          .article-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+
+            .article-name {
+              color: var(--text-primary);
+              font-weight: 600;
+              font-size: 0.95rem;
+            }
+
+            .article-info {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              gap: 1rem;
+
+              .article-quantity {
+                color: var(--text-secondary);
+                font-size: 0.85rem;
+              }
+
+              .article-price {
+                color: var(--success-color);
+                font-weight: 600;
+                font-size: 0.85rem;
+                background: rgba(16, 185, 129, 0.1);
+                padding: 0.25rem 0.5rem;
+                border-radius: 6px;
+              }
+            }
+          }
+        }
+      }      .empty-articles {
+        text-align: center;
+        padding: 1.5rem; // Padding réduit
+        color: var(--text-secondary);
+
+        i {
+          font-size: 3rem;
+          opacity: 0.5;
+          margin-bottom: 1rem;
+          display: block;
+        }
+
+        p {
+          margin: 0;
+          font-style: italic;
+        }
+      }
+    }
+  }
+  // Footer de la dialog
+  .dialog-footer {
+    padding: 1rem 1.5rem; // Padding réduit
+    background: #f8fafc;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-radius: 0 0 24px 24px; // Bords arrondis seulement en bas
+
+    .close-button {
+      border-color: var(--border-color) !important;
+      color: var(--text-secondary) !important;
+
+      &:hover {
+        background: #f3f4f6 !important;
+        border-color: var(--text-secondary) !important;
+      }
+    }
+
+    .print-button {
+      background: var(--gradient-secondary) !important;
+      border: none !important;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3);
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  ::ng-deep .modern-order-dialog .p-dialog {
+    width: 95vw !important;
+    max-width: none !important;
+    margin: 1rem;
+  }
+
+  .modern-dialog-content {    .dialog-header {
+      padding: 1rem; // Padding réduit pour mobile
+
+      .order-badge {
+        .badge-text h2 {
+          font-size: 1.1rem;
+        }
+      }
+    }
+
+    .status-section {
+      padding: 0.75rem 1rem; // Padding réduit pour mobile
+    }
+
+    .dialog-body {
+      padding: 1rem; // Padding réduit pour mobile
+
+      .info-section .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .articles-section .articles-grid {
+        grid-template-columns: 1fr;
+      }
+    }    .dialog-footer {
+      padding: 0.75rem 1rem; // Padding réduit pour mobile
+      flex-direction: column;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}

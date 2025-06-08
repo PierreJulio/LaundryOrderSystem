@@ -1,0 +1,459 @@
+// Styles pour le dashboard administrateur
+
+.admin-dashboard-wrapper {
+  background: #f9fafb;
+  min-height: 100vh;
+  padding: 1rem;
+
+  h2, h3 {
+    color: #1f2937;
+    font-weight: 700;
+  }
+
+  // Conteneur pour les cartes de statistiques - 5 cartes sur une ligne
+  .stats-cards-container {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    margin-bottom: 1.5rem;
+
+    .stat-card-wrapper {
+      flex: 1;
+      min-width: 0;
+    }
+
+    @media (max-width: 1199px) {
+      flex-wrap: wrap;
+      
+      .stat-card-wrapper {
+        flex: 1 1 calc(50% - 0.5rem);
+        min-width: calc(50% - 0.5rem);
+      }
+    }
+
+    @media (max-width: 767px) {
+      flex-direction: column;
+      
+      .stat-card-wrapper {
+        flex: 1 1 100%;
+        min-width: 100%;
+      }
+    }
+  }  // Styles pour les cartes de statistiques
+  .p-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    &.cursor-pointer:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border-color: #3b82f6;
+    }
+  }
+
+  .stat-card {
+    text-align: center;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+    
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      display: block;
+      line-height: 1.2;
+      transition: color 0.3s ease;
+    }
+    
+    .stat-label {
+      font-size: 0.875rem;
+      color: #6b7280;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      transition: color 0.3s ease;
+    }
+  }  // Couleurs spécifiques pour chaque type de carte
+  .stat-card:nth-child(1) .stat-number { color: #3b82f6; } // Total - Bleu
+  .stat-card:nth-child(2) .stat-number { color: #f59e0b; } // En attente - Orange
+  .stat-card:nth-child(3) .stat-number { color: #10b981; } // Approuvées - Vert
+  .stat-card:nth-child(4) .stat-number { color: #ef4444; } // Rejetées - Rouge
+  .stat-card:nth-child(5) .stat-number { color: #3b82f6; } // Terminées - Bleu  // Styles pour les cartes de filtre actives
+  .filter-active {
+    background-color: #dbeafe; // Bleu très clair
+    border-color: #3b82f6;
+    border-width: 2px;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+    
+    .stat-card {
+      .stat-number {
+        color: #1e40af; // Bleu foncé pour excellent contraste
+        font-weight: 800;
+        font-size: 2.2rem;
+      }
+      .stat-label {
+        color: #1e3a8a; // Bleu très foncé
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+    }
+  }  .filter-active-pending {
+    background-color: #fef3c7; // Orange très clair
+    border-color: #f59e0b;
+    border-width: 2px;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+    
+    .stat-card {
+      .stat-number {
+        color: #92400e; // Orange foncé pour excellent contraste
+        font-weight: 800;
+        font-size: 2.2rem;
+      }
+      .stat-label {
+        color: #78350f; // Orange très foncé
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+    }
+  }
+  .filter-active-approved {
+    background-color: #d1fae5; // Vert très clair
+    border-color: #10b981;
+    border-width: 2px;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+    
+    .stat-card {
+      .stat-number {
+        color: #065f46; // Vert foncé pour excellent contraste
+        font-weight: 800;
+        font-size: 2.2rem;
+      }
+      .stat-label {
+        color: #064e3b; // Vert très foncé
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+    }
+  }
+  .filter-active-rejected {
+    background-color: #fee2e2; // Rouge très clair
+    border-color: #ef4444;
+    border-width: 2px;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+    
+    .stat-card {
+      .stat-number {
+        color: #991b1b; // Rouge foncé pour excellent contraste
+        font-weight: 800;
+        font-size: 2.2rem;
+      }
+      .stat-label {
+        color: #7f1d1d; // Rouge très foncé
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+    }
+  }
+  .filter-active-completed {
+    background-color: #dbeafe; // Bleu très clair
+    border-color: #3b82f6;
+    border-width: 2px;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+    
+    .stat-card {
+      .stat-number {
+        color: #1e40af; // Bleu foncé pour excellent contraste
+        font-weight: 800;
+        font-size: 2.2rem;
+      }
+      .stat-label {
+        color: #1e3a8a; // Bleu très foncé
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  // === STYLES POUR LE GRAPHIQUE ===
+  .chart-container {
+    min-height: 300px !important;
+    background: #ffffff !important;
+    border-radius: 6px !important;
+    padding: 1rem !important;
+    border: 1px solid #e5e7eb !important;
+
+    .p-card-body {
+      background: #ffffff !important;
+    }
+
+    canvas {
+      background: #ffffff !important;
+    }
+  }
+
+  // === STYLES POUR LES BOUTONS DE FILTRE ===
+  .filter-buttons .p-button {
+    margin-right: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+    font-weight: 500 !important;
+    
+    &.p-button-outlined {
+      background-color: #ffffff !important;
+      color: #374151 !important;
+      border-color: #d1d5db !important;
+
+      &:hover {
+        background-color: #f3f4f6 !important;
+        color: #374151 !important;
+        border-color: #9ca3af !important;
+      }
+    }
+    
+    &.p-button-primary {
+      background-color: #3b82f6 !important;
+      border-color: #3b82f6 !important;
+      color: #ffffff !important;
+
+      &:hover {
+        background-color: #2563eb !important;
+        border-color: #2563eb !important;
+      }
+    }
+    
+    &.p-button-warning {
+      background-color: #f59e0b !important;
+      border-color: #f59e0b !important;
+      color: #ffffff !important;
+
+      &:hover {
+        background-color: #d97706 !important;
+        border-color: #d97706 !important;
+      }
+    }
+    
+    &.p-button-success {
+      background-color: #10b981 !important;
+      border-color: #10b981 !important;
+      color: #ffffff !important;
+
+      &:hover {
+        background-color: #059669 !important;
+        border-color: #059669 !important;
+      }
+    }
+
+    &.p-button-danger {
+      background-color: #ef4444 !important;
+      border-color: #ef4444 !important;
+      color: #ffffff !important;
+
+      &:hover {
+        background-color: #dc2626 !important;
+        border-color: #dc2626 !important;
+      }
+    }
+    
+    &.p-button-info {
+      background-color: #3b82f6 !important;
+      border-color: #3b82f6 !important;
+      color: #ffffff !important;
+
+      &:hover {
+        background-color: #2563eb !important;
+        border-color: #2563eb !important;
+      }
+    }
+  }
+
+  // === STYLES POUR LE TABLEAU ===
+  .p-datatable {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    
+    .p-datatable-wrapper {
+      background: #ffffff !important;
+    }
+    
+    .p-datatable-header {
+      background: #f9fafb !important;
+      color: #374151 !important;
+      border-bottom: 1px solid #e5e7eb !important;
+      padding: 1rem !important;
+    }
+    
+    .p-datatable-thead > tr > th {
+      background-color: #f9fafb !important;
+      color: #374151 !important;
+      border-bottom: 2px solid #e5e7eb !important;
+      font-weight: 600 !important;
+      padding: 1rem !important;
+      text-transform: uppercase !important;
+      font-size: 0.75rem !important;
+      letter-spacing: 0.05em !important;
+    }
+    
+    .p-datatable-tbody > tr {
+      background: #ffffff !important;
+      
+      > td {
+        color: #374151 !important;
+        border-bottom: 1px solid #f3f4f6 !important;
+        background: #ffffff !important;
+        padding: 1rem !important;
+      }
+
+      &:hover {
+        background-color: #f9fafb !important;
+        
+        > td {
+          background-color: #f9fafb !important;
+        }
+      }
+        &:nth-child(even) {
+        background-color: #fafafa !important;
+        
+        > td {
+          background-color: #fafafa !important;
+        }
+
+        &:hover {
+          background-color: #f3f4f6 !important;
+          
+          > td {
+            background-color: #f3f4f6 !important;
+          }
+        }
+      }
+    }
+  }
+
+  // === STYLES POUR LA PAGINATION ===
+  .p-paginator {
+    background: #ffffff !important;
+    border: none !important;
+    padding: 1rem !important;
+    border-top: 1px solid #e5e7eb !important;      .p-paginator-current {
+      background: transparent !important;
+      color: #374151 !important;
+      font-weight: 500 !important;
+      font-size: 0.875rem !important;
+    }
+    
+    // Styles pour le dropdown de sélection du nombre d'éléments par page
+    .p-dropdown {
+      background: #ffffff !important;
+      border: 1px solid #d1d5db !important;
+      border-radius: 6px !important;
+      
+      .p-dropdown-label {
+        color: #374151 !important;
+        font-weight: 500 !important;
+        padding: 0.5rem 0.75rem !important;
+      }
+      
+      .p-dropdown-trigger {
+        background: transparent !important;
+        color: #6b7280 !important;
+        border-left: 1px solid #d1d5db !important;
+        
+        .p-dropdown-trigger-icon {
+          color: #6b7280 !important;
+        }
+      }
+      
+      &:hover {
+        border-color: #9ca3af !important;
+      }
+      
+      &:focus, &.p-focus {
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 1px #3b82f6 !important;
+      }
+    }
+    
+    .p-paginator-pages .p-paginator-page {
+      background: transparent !important;
+      color: #6b7280 !important;
+      border: 1px solid #d1d5db !important;
+      margin: 0 0.125rem !important;
+      
+      &:hover {
+        background: #f3f4f6 !important;
+        color: #374151 !important;
+      }
+      
+      &.p-highlight {
+        background: #3b82f6 !important;
+        color: #ffffff !important;
+        border-color: #3b82f6 !important;
+      }
+    }
+    
+    .p-paginator-first, .p-paginator-prev, .p-paginator-next, .p-paginator-last {
+      background: transparent !important;
+      color: #6b7280 !important;
+      border: 1px solid #d1d5db !important;
+      margin: 0 0.125rem !important;
+      
+      &:hover:not(.p-disabled) {
+        background: #f3f4f6 !important;
+        color: #374151 !important;
+      }
+      
+      &.p-disabled {
+        opacity: 0.5 !important;
+      }
+    }
+  }
+
+  // === STYLES POUR LES TAGS DE STATUT ===
+  .p-tag {
+    font-weight: 600 !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 9999px !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.025em !important;
+    
+    &.p-tag-warning {
+      background-color: #f59e0b !important;
+      color: #ffffff !important;
+      border: 1px solid #f59e0b !important;
+    }
+    
+    &.p-tag-success {
+      background-color: #10b981 !important;
+      color: #ffffff !important;
+      border: 1px solid #10b981 !important;
+    }
+    
+    &.p-tag-danger {
+      background-color: #ef4444 !important;
+      color: #ffffff !important;
+      border: 1px solid #ef4444 !important;
+    }
+    
+    &.p-tag-info {
+      background-color: #3b82f6 !important;
+      color: #ffffff !important;
+      border: 1px solid #3b82f6 !important;
+    }
+  }
+
+  // === STYLES POUR LE TOAST ===
+  .p-toast {
+    z-index: 9999 !important;
+  }
+}

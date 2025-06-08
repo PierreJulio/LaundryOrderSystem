@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>Laundry Service Logo</title>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle fill="#3F51B5" cx="100" cy="100" r="100"></circle>
+        <g transform="translate(50, 50)">
+            <circle stroke="#FFFFFF" stroke-width="8" cx="50" cy="50" r="45"></circle>
+            <path d="M50,20 C70,20 85,35 85,55 C85,75 70,90 50,90 C30,90 15,75 15,55" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"></path>
+            <path d="M50,35 C62,35 72,45 72,57 C72,69 62,79 50,79 C38,79 28,69 28,57" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"></path>
+            <circle fill="#FFFFFF" cx="50" cy="55" r="10"></circle>
+        </g>
+    </g>
+</svg>

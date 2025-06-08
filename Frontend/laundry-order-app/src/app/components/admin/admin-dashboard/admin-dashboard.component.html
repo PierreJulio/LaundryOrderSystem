@@ -1,0 +1,193 @@
+<div class="admin-dashboard-wrapper">
+    <div class="grid">
+        <p-toast></p-toast>
+
+        <div class="col-12">
+            <h2>Tableau de bord administrateur</h2>
+        </div>        <!-- Stats Cards Row -->
+        <div class="col-12">
+            <div class="stats-cards-container">
+                <div class="stat-card-wrapper">
+                    <p-card styleClass="h-full cursor-pointer" 
+                            [class.filter-active]="statusFilter === null"
+                            (click)="setStatusFilter(null)">
+                        <div class="stat-card">
+                            <span class="stat-number">{{ totalOrders }}</span>
+                            <span class="stat-label">Commandes totales</span>
+                        </div>
+                    </p-card>
+                </div>
+
+                <div class="stat-card-wrapper">
+                    <p-card styleClass="h-full cursor-pointer" 
+                            [class.filter-active-pending]="statusFilter === OrderStatus.Pending"
+                            (click)="setStatusFilter(OrderStatus.Pending)">
+                        <div class="stat-card">
+                            <span class="stat-number">{{ pendingCount }}</span>
+                            <span class="stat-label">En attente</span>
+                        </div>
+                    </p-card>
+                </div>
+
+                <div class="stat-card-wrapper">
+                    <p-card styleClass="h-full cursor-pointer" 
+                            [class.filter-active-approved]="statusFilter === OrderStatus.Approved"
+                            (click)="setStatusFilter(OrderStatus.Approved)">
+                        <div class="stat-card">
+                            <span class="stat-number">{{ approvedCount }}</span>
+                            <span class="stat-label">Approuvées</span>
+                        </div>
+                    </p-card>
+                </div>
+
+                <div class="stat-card-wrapper">
+                    <p-card styleClass="h-full cursor-pointer" 
+                            [class.filter-active-rejected]="statusFilter === OrderStatus.Rejected"
+                            (click)="setStatusFilter(OrderStatus.Rejected)">
+                        <div class="stat-card">
+                            <span class="stat-number">{{ rejectedCount }}</span>
+                            <span class="stat-label">Rejetées</span>
+                        </div>
+                    </p-card>
+                </div>
+
+                <div class="stat-card-wrapper">
+                    <p-card styleClass="h-full cursor-pointer" 
+                            [class.filter-active-completed]="statusFilter === OrderStatus.Completed"
+                            (click)="setStatusFilter(OrderStatus.Completed)">
+                        <div class="stat-card">
+                            <span class="stat-number">{{ completedCount }}</span>
+                            <span class="stat-label">Terminées</span>
+                        </div>
+                    </p-card>
+                </div>
+            </div>
+        </div><!-- Chart -->
+        <div class="col-12 lg:col-8">
+            <p-card header="Répartition des commandes" styleClass="h-full">
+                <div class="chart-container">
+                    <p-chart type="pie" [data]="statusChartData" [options]="statusChartOptions" 
+                            [style]="{ width: '100%', height: '300px' }"></p-chart>
+                </div>
+            </p-card>
+        </div>
+
+        <!-- Filter Info -->
+        <div class="col-12 lg:col-4">
+            <p-card header="Filtre actuel" styleClass="h-full">
+                <div class="flex flex-column align-items-center justify-content-center h-full">
+                    <div *ngIf="statusFilter === null" class="text-center">
+                        <i class="pi pi-filter text-6xl text-primary mb-3"></i>
+                        <p class="text-lg">Toutes les commandes</p>
+                        <p class="text-color-secondary">{{ totalOrders }} commande(s)</p>
+                    </div>
+                    <div *ngIf="statusFilter !== null" class="text-center">
+                        <i class="pi pi-filter-fill text-6xl text-primary mb-3"></i>
+                        <p class="text-lg">{{ getStatusLabel(statusFilter) }}</p>
+                        <p class="text-color-secondary">{{ getFilteredOrders().length }} commande(s)</p>
+                        <button pButton icon="pi pi-times" label="Réinitialiser" 
+                                class="p-button-outlined p-button-sm mt-2"
+                                (click)="setStatusFilter(null)"></button>
+                    </div>
+                </div>
+            </p-card>
+        </div>        <!-- All Orders -->
+        <div class="col-12">
+            <p-card>
+                <ng-template pTemplate="header">
+                    <div class="flex justify-content-between align-items-center w-full">
+                        <h3 class="m-0">Liste des commandes</h3>
+                        <span *ngIf="statusFilter !== null" class="text-color-secondary">
+                            Filtré par : {{ getStatusLabel(statusFilter) }}
+                        </span>
+                    </div>
+                </ng-template>
+                
+                <div class="filter-buttons mb-3">
+                    <button pButton type="button" label="Toutes" 
+                            [class]="statusFilter === null ? 'p-button-primary' : 'p-button-outlined'"
+                            class="mr-2 mb-2" (click)="setStatusFilter(null)">
+                    </button>
+                    <button pButton type="button" label="En attente" 
+                            [class]="statusFilter === OrderStatus.Pending ? 'p-button-warning' : 'p-button-outlined'"
+                            class="mr-2 mb-2" (click)="setStatusFilter(OrderStatus.Pending)">
+                    </button>
+                    <button pButton type="button" label="Approuvées" 
+                            [class]="statusFilter === OrderStatus.Approved ? 'p-button-success' : 'p-button-outlined'"
+                            class="mr-2 mb-2" (click)="setStatusFilter(OrderStatus.Approved)">
+                    </button>
+                    <button pButton type="button" label="Rejetées" 
+                            [class]="statusFilter === OrderStatus.Rejected ? 'p-button-danger' : 'p-button-outlined'"
+                            class="mr-2 mb-2" (click)="setStatusFilter(OrderStatus.Rejected)">
+                    </button>
+                    <button pButton type="button" label="Terminées" 
+                            [class]="statusFilter === OrderStatus.Completed ? 'p-button-info' : 'p-button-outlined'"
+                            class="mr-2 mb-2" (click)="setStatusFilter(OrderStatus.Completed)">
+                    </button>
+                </div>
+
+                <p-table [value]="getFilteredOrders()" [paginator]="true" [rows]="10" 
+                        [rowsPerPageOptions]="[5,10,25]" styleClass="p-datatable-sm" 
+                        [responsive]="true" [loading]="loading"
+                        [showCurrentPageReport]="true" 
+                        currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} commandes">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 80px;">#</th>
+                            <th>Client</th>
+                            <th style="width: 120px;">Date</th>
+                            <th style="width: 100px;">Articles</th>
+                            <th style="width: 120px;">Statut</th>
+                            <th style="width: 120px;">Actions</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-order>
+                        <tr>
+                            <td><strong>{{ order.id }}</strong></td>
+                            <td>
+                                <div>
+                                    <strong>{{ order.customerName }} {{ order.customerSurname }}</strong>
+                                </div>
+                            </td>
+                            <td>{{ order.orderDate | date:'dd/MM/yyyy' }}</td>
+                            <td class="text-center">
+                                <span class="p-badge p-badge-info">
+                                    {{ (order.items?.length || order.laundryItems?.length || 0) }}
+                                </span>
+                            </td>
+                            <td>
+                                <p-tag [severity]="getStatusClass(order.status)" [value]="getStatusLabel(order.status)"></p-tag>
+                            </td>
+                            <td>
+                                <div class="flex">
+                                    <button pButton icon="pi pi-eye" 
+                                           class="p-button-rounded p-button-text p-button-sm mr-1" 
+                                           [routerLink]="['/orders', order.id]"
+                                           pTooltip="Voir les détails"></button>
+                                    <button *ngIf="order.status === OrderStatus.Pending" 
+                                           pButton icon="pi pi-check-circle" 
+                                           class="p-button-rounded p-button-text p-button-success p-button-sm"
+                                           routerLink="/admin/validation"
+                                           pTooltip="Valider la commande"></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="6" class="text-center p-4">
+                                <div class="flex flex-column align-items-center">
+                                    <i class="pi pi-inbox text-6xl text-color-secondary mb-3"></i>
+                                    <p class="text-xl text-color-secondary">Aucune commande à afficher</p>
+                                    <small class="text-color-secondary">
+                                        {{ statusFilter !== null ? 'Aucune commande trouvée pour ce filtre' : 'Aucune commande dans le système' }}
+                                    </small>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-card>
+        </div>
+    </div>
+</div>
