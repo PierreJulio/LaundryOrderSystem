@@ -138,3 +138,41 @@ body {
     padding: 0 !important;
     margin: 0 !important;
 }
+
+.p-tag {
+    font-weight: 600 !important;
+    border-radius: 9999px !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.025em !important;
+    
+    &.p-tag-warning {
+        background-color: #f59e0b !important;
+        color: #ffffff !important;
+        border: 1px solid #f59e0b !important;
+    }
+    
+    &.p-tag-success {
+        background-color: #10b981 !important;
+        color: #ffffff !important;
+        border: 1px solid #10b981 !important;
+    }
+    
+    &.p-tag-danger {
+        background-color: #ef4444 !important;
+        color: #ffffff !important;
+        border: 1px solid #ef4444 !important;
+    }
+    
+    &.p-tag-info {
+        background-color: #3b82f6 !important;
+        color: #ffffff !important;
+        border: 1px solid #3b82f6 !important;
+    }
+    
+    &.p-tag-secondary {
+        background-color: #6b7280 !important;
+        color: #ffffff !important;
+        border: 1px solid #6b7280 !important;
+    }
+}
