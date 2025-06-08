@@ -44,46 +44,121 @@
                 </ng-template>
             </p-table>
         </p-card>
-    </div>
-
-    <!-- Dialogue de validation -->
-    <p-dialog header="Valider la commande" [(visible)]="validationVisible" 
-              [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false">
-        <div *ngIf="selectedOrder" class="grid p-fluid">
-            <div class="col-12">
-                <h4>Détails de la commande #{{ selectedOrder.id }}</h4>
-                <p><strong>Client:</strong> {{ selectedOrder.userName }}</p>
-                <p><strong>Date:</strong> {{ selectedOrder.orderDate | date:'dd/MM/yyyy' }}</p>
-                <p><strong>Articles:</strong></p>
-                <ul>                    <li *ngFor="let item of selectedOrder.items || []">
-                        {{ item.name }} × {{ item.quantity || 1 }}
-                    </li>
-                </ul>
-                
-                <p *ngIf="selectedOrder.reason"><strong>Motif:</strong> {{ selectedOrder.reason }}</p>
-                <p *ngIf="selectedOrder.comment"><strong>Commentaire:</strong> {{ selectedOrder.comment }}</p>
+    </div>    <!-- Dialogue de validation moderne -->
+    <p-dialog [(visible)]="validationVisible" [modal]="true" 
+              [style]="{width: '600px'}" [draggable]="false" [resizable]="false"
+              styleClass="modern-validation-dialog" [showHeader]="false">
+        
+        <div *ngIf="selectedOrder" class="validation-dialog-content">
+            <!-- Header personnalisé avec gradient -->
+            <div class="dialog-header">
+                <div class="header-content">
+                    <div class="header-icon">
+                        <i class="pi pi-check-circle"></i>
+                    </div>
+                    <div class="header-text">
+                        <h2>Validation de commande</h2>
+                        <p>Commande #{{ selectedOrder.id }}</p>
+                    </div>
+                </div>
+                <button pButton type="button" icon="pi pi-times" 
+                        class="close-btn p-button-text p-button-rounded"
+                        (click)="validationVisible = false"></button>
             </div>
 
-            <div class="col-12">
-                <form [formGroup]="validationForm" class="pt-3">
-                    <div class="field">
-                        <label for="status">Décision</label>
-                        <p-dropdown id="status" [options]="statusOptions" formControlName="status"
-                                   optionLabel="label" optionValue="value" styleClass="w-full"></p-dropdown>
+            <!-- Détails de la commande avec design moderne -->
+            <div class="dialog-body">
+                <div class="order-summary-card">
+                    <div class="summary-header">
+                        <i class="pi pi-file-o"></i>
+                        <h3>Détails de la commande</h3>
                     </div>
-                      <div class="field">
-                        <label for="reason">Commentaire (facultatif)</label>
-                        <textarea id="reason" pInputTextarea formControlName="reason" 
-                                 rows="3" styleClass="w-full"></textarea>
+                    
+                    <div class="order-info-grid">
+                        <div class="info-item">
+                            <span class="label">Client</span>
+                            <span class="value">{{ selectedOrder.userName }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Date</span>
+                            <span class="value">{{ selectedOrder.orderDate | date:'dd/MM/yyyy à HH:mm' }}</span>
+                        </div>
+                        <div class="info-item full-width" *ngIf="selectedOrder.reason">
+                            <span class="label">Motif</span>
+                            <span class="value reason">{{ selectedOrder.reason }}</span>
+                        </div>
+                        <div class="info-item full-width" *ngIf="selectedOrder.comment">
+                            <span class="label">Commentaire client</span>
+                            <span class="value comment">{{ selectedOrder.comment }}</span>
+                        </div>
                     </div>
-                </form>
+                </div>
+
+                <!-- Articles avec design moderne -->
+                <div class="articles-card">
+                    <div class="articles-header">
+                        <i class="pi pi-shopping-bag"></i>
+                        <h3>Articles ({{ (selectedOrder.items?.length || 0) }})</h3>
+                    </div>
+                    
+                    <div class="articles-list">
+                        <div *ngFor="let item of selectedOrder.items || []" class="article-item">
+                            <div class="article-icon">
+                                <i class="pi pi-tag"></i>
+                            </div>
+                            <div class="article-details">
+                                <span class="article-name">{{ item.name }}</span>
+                                <span class="article-quantity">Quantité: {{ item.quantity || 1 }}</span>
+                            </div>
+                            <div class="article-price" *ngIf="item.price">
+                                {{ item.price | currency:'EUR' }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulaire de validation avec design moderne -->
+                <div class="validation-form-card">
+                    <div class="form-header">
+                        <i class="pi pi-cog"></i>
+                        <h3>Décision de validation</h3>
+                    </div>
+                    
+                    <form [formGroup]="validationForm" class="validation-form">
+                        <div class="form-field">
+                            <label for="status" class="modern-label">
+                                <i class="pi pi-flag"></i>
+                                Décision *
+                            </label>
+                            <p-dropdown id="status" [options]="statusOptions" formControlName="status"
+                                       optionLabel="label" optionValue="value" 
+                                       placeholder="Sélectionnez une décision"
+                                       styleClass="w-full modern-dropdown"></p-dropdown>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="reason" class="modern-label">
+                                <i class="pi pi-comment"></i>
+                                Commentaire administrateur (facultatif)
+                            </label>
+                            <textarea id="reason" pInputTextarea formControlName="reason" 
+                                     rows="3" styleClass="w-full modern-textarea"
+                                     placeholder="Ajoutez un commentaire si nécessaire..."></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Footer avec boutons modernes -->
+            <div class="dialog-footer">
+                <button pButton type="button" label="Annuler" icon="pi pi-times" 
+                        class="cancel-btn p-button-outlined"
+                        (click)="validationVisible = false"></button>
+                <button pButton type="button" label="Confirmer la décision" icon="pi pi-check" 
+                        class="confirm-btn"
+                        [disabled]="validationForm.get('status')?.invalid"
+                        (click)="validateOrder()"></button>
             </div>
         </div>
-        <ng-template pTemplate="footer">
-            <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text" 
-                    (click)="validationVisible = false"></button>
-            <button pButton pRipple label="Confirmer" icon="pi pi-check" 
-                    (click)="validateOrder()"></button>
-        </ng-template>
     </p-dialog>
 </div>

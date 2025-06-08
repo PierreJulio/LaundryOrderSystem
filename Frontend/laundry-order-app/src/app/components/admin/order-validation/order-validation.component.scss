@@ -1,0 +1,604 @@
+/* Styles modernes pour la popup de validation */
+
+// Variables CSS pour la cohérence
+:host {
+  --validation-primary: #667eea;
+  --validation-secondary: #764ba2;
+  --validation-success: #10b981;
+  --validation-warning: #f59e0b;
+  --validation-danger: #ef4444;
+  --validation-info: #3b82f6;
+  --validation-light: #f8fafc;
+  --validation-border: #e2e8f0;
+  --validation-text: #1e293b;
+  --validation-text-light: #64748b;
+  --validation-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --validation-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour la dialog moderne */
+::ng-deep .modern-validation-dialog {
+  .p-dialog {
+    border-radius: 20px !important;
+    box-shadow: var(--validation-shadow) !important;
+    border: none !important;
+    overflow: hidden !important;
+    background: white !important;
+  }
+
+  .p-dialog-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: white !important;
+  }
+
+  /* Améliorations supplémentaires pour les couleurs */
+  /* Styles pour les boutons dans la dialog */
+  .p-button {
+    &.cancel-btn {
+      background: white !important;
+      border: 2px solid #e2e8f0 !important;
+      color: #1e293b !important;
+
+      &:hover:not(:disabled) {
+        background: #f8fafc !important;
+        border-color: #64748b !important;
+      }
+    }
+
+    &.confirm-btn {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+      border: none !important;
+      color: white !important;
+
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+      }
+    }
+
+    &.close-btn {
+      background: rgba(255, 255, 255, 0.2) !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      color: white !important;
+
+      &:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.3) !important;
+      }
+    }
+  }
+
+  /* Styles pour le dropdown */
+  .p-dropdown {
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+
+    &:hover {
+      border-color: #667eea !important;
+    }
+
+    &.p-focus {
+      border-color: #667eea !important;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    }
+
+    .p-dropdown-label {
+      color: #1e293b !important;
+      font-weight: 500 !important;
+    }
+
+    .p-dropdown-trigger {
+      color: #64748b !important;
+    }
+  }
+
+  /* Styles pour le textarea */
+  .p-inputtextarea {
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+
+    &:hover {
+      border-color: #667eea !important;
+    }
+
+    &:focus {
+      border-color: #667eea !important;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    }
+  }
+}
+
+/* Contenu principal de la dialog */
+.validation-dialog-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+  background: white;
+}
+
+/* Header avec gradient moderne */
+.dialog-header {
+  background: linear-gradient(135deg, var(--validation-primary) 0%, var(--validation-secondary) 100%);
+  color: white;
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 1;
+
+    .header-icon {
+      width: 60px;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+
+      i {
+        font-size: 1.8rem;
+        color: white;
+      }
+    }
+
+    .header-text {
+      h2 {
+        margin: 0 0 0.25rem 0;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: white;
+      }
+
+      p {
+        margin: 0;
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
+      }
+    }
+  }
+
+  .close-btn {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    z-index: 1;
+    transition: all 0.3s ease !important;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2) !important;
+      transform: scale(1.1) !important;
+    }
+  }
+}
+
+/* Corps de la dialog */
+.dialog-body {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background: var(--validation-light);
+}
+
+/* Cartes de contenu */
+.order-summary-card,
+.articles-card,
+.validation-form-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--validation-shadow-sm);
+  border: 1px solid var(--validation-border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* Headers des sections */
+.summary-header,
+.articles-header,
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--validation-border);
+
+  i {
+    color: var(--validation-primary);
+    font-size: 1.25rem;
+  }
+
+  h3 {
+    margin: 0;
+    color: var(--validation-text);
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+}
+
+/* Grille d'informations de commande */
+.order-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem;
+    background: var(--validation-light);
+    border-radius: 12px;
+    border: 1px solid var(--validation-border);
+
+    &.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .label {
+      font-size: 0.875rem;
+      color: var(--validation-text-light);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .value {
+      color: var(--validation-text);
+      font-weight: 500;
+      font-size: 1rem;
+
+      &.reason,
+      &.comment {
+        background: white;
+        padding: 0.75rem;
+        border-radius: 8px;
+        border: 1px solid var(--validation-border);
+        font-style: italic;
+        line-height: 1.5;
+      }
+    }
+  }
+}
+
+/* Liste des articles */
+.articles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  .article-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--validation-light);
+    border-radius: 12px;
+    border: 1px solid var(--validation-border);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: white;
+      transform: translateX(4px);
+    }
+
+    .article-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--validation-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .article-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      .article-name {
+        font-weight: 600;
+        color: var(--validation-text);
+        font-size: 1rem;
+      }
+
+      .article-quantity {
+        font-size: 0.875rem;
+        color: var(--validation-text-light);
+      }
+    }
+
+    .article-price {
+      font-weight: 700;
+      color: var(--validation-success);
+      font-size: 1.1rem;
+    }
+  }
+}
+
+/* Formulaire de validation */
+.validation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .modern-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      color: var(--validation-text);
+      font-size: 0.95rem;
+
+      i {
+        color: var(--validation-primary);
+        font-size: 0.875rem;
+      }
+    }
+  }
+}
+
+/* Styles pour les éléments de formulaire PrimeNG */
+::ng-deep {
+  .modern-dropdown {
+    .p-dropdown {
+      border: 2px solid var(--validation-border) !important;
+      border-radius: 12px !important;
+      transition: all 0.3s ease !important;
+
+      &:hover {
+        border-color: var(--validation-primary) !important;
+      }
+
+      &.p-focus {
+        border-color: var(--validation-primary) !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+      }
+    }
+  }
+
+  .modern-textarea {
+    border: 2px solid var(--validation-border) !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    transition: all 0.3s ease !important;
+    font-family: inherit !important;
+
+    &:hover {
+      border-color: var(--validation-primary) !important;
+    }
+
+    &:focus {
+      border-color: var(--validation-primary) !important;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    }
+
+    &::placeholder {
+      color: var(--validation-text-light) !important;
+      font-style: italic !important;
+    }
+  }
+}
+
+/* Footer avec boutons modernes */
+.dialog-footer {
+  padding: 1.5rem 2rem;
+  background: white;
+  border-top: 1px solid var(--validation-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+
+  .cancel-btn {
+    background: white !important;
+    border: 2px solid var(--validation-border) !important;
+    color: var(--validation-text) !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    min-width: 120px !important;
+
+    &:hover:not(:disabled) {
+      background: var(--validation-light) !important;
+      border-color: var(--validation-text-light) !important;
+      transform: translateY(-2px) !important;
+      box-shadow: var(--validation-shadow-sm) !important;
+    }
+  }
+
+  .confirm-btn {
+    background: linear-gradient(135deg, var(--validation-success) 0%, #059669 100%) !important;
+    border: none !important;
+    color: white !important;
+    padding: 0.75rem 2rem !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+    min-width: 150px !important;
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4) !important;
+    }    &:disabled {
+      background: #9ca3af !important;
+      box-shadow: none !important;
+      cursor: not-allowed !important;
+      transform: none !important;
+      opacity: 0.6 !important;
+    }
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  ::ng-deep .modern-validation-dialog .p_dialog {
+    width: 95vw !important;
+    max-width: none !important;
+    margin: 1rem !important;
+  }
+
+  .dialog-header {
+    padding: 1.5rem !important;
+
+    .header-content {
+      flex-direction: column !important;
+      text-align: center !important;
+      gap: 1rem !important;
+    }
+  }
+
+  .dialog-body {
+    padding: 1.5rem !important;
+  }
+
+  .order-info-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .dialog-footer {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+
+    .cancel-btn,
+    .confirm-btn {
+      width: 100% !important;
+    }
+  }
+}
+
+/* Animations d'entrée */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+::ng-deep .modern-validation-dialog .p_dialog {
+  animation: fadeInScale 0.3s ease-out !important;
+}
+
+/* Amélioration des couleurs des icônes */
+.header-icon i {
+  color: white !important;
+  font-size: 2rem !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.summary-header i,
+.articles-header i,
+.form-header i {
+  color: #667eea !important;
+  background: rgba(102, 126, 234, 0.1) !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.article-icon i {
+  color: #10b981 !important;
+  background: rgba(16, 185, 129, 0.1) !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Correction des couleurs de texte */
+.order-info-grid .info-item {
+  .label {
+    color: #64748b !important;
+    font-weight: 600 !important;
+  }
+
+  .value {
+    color: #1e293b !important;
+    font-weight: 500 !important;
+
+    &.reason,
+    &.comment {
+      background: #f8fafc !important;
+      color: #475569 !important;
+      font-style: italic !important;
+    }
+  }
+}
+
+.articles-list .article-item {
+  .article-name {
+    color: #1e293b !important;
+    font-weight: 600 !important;
+  }
+
+  .article-quantity {
+    color: #64748b !important;
+  }
+
+  .article-price {
+    color: #10b981 !important;
+    font-weight: 600 !important;
+  }
+}
+
+.modern-label {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+
+  i {
+    color: #667eea !important;
+    margin-right: 0.5rem !important;
+  }
+}
