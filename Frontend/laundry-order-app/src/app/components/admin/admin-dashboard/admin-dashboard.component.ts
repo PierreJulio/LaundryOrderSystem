@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -58,7 +58,8 @@ export class AdminDashboardComponent implements OnInit {
 
   constructor(
     private orderService: OrderService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) { }  ngOnInit(): void {
     console.log('AdminDashboard ngOnInit called');
     
@@ -298,5 +299,15 @@ export class AdminDashboardComponent implements OnInit {
       default:
         return 'secondary';
     }
+  }
+
+  // Navigation vers les détails d'une commande en sauvegardant l'origine
+  viewOrderDetails(orderId: number): void {
+    // Sauvegarder que l'utilisateur vient du dashboard admin
+    sessionStorage.setItem('orderDetailReturnUrl', '/admin');
+    sessionStorage.setItem('lastAdminPage', '/admin');
+    
+    // Naviguer vers les détails de la commande
+    this.router.navigate(['/orders', orderId]);
   }
 }

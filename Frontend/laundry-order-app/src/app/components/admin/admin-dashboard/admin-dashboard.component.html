@@ -157,12 +157,11 @@
                             </td>
                             <td>
                                 <p-tag [severity]="getStatusClass(order.status)" [value]="getStatusLabel(order.status)"></p-tag>
-                            </td>
-                            <td>
+                            </td>                            <td>
                                 <div class="flex">
                                     <button pButton icon="pi pi-eye" 
                                            class="p-button-rounded p-button-text p-button-sm mr-1" 
-                                           [routerLink]="['/orders', order.id]"
+                                           (click)="viewOrderDetails(order.id)"
                                            pTooltip="Voir les détails"></button>
                                     <button *ngIf="order.status === OrderStatus.Pending" 
                                            pButton icon="pi pi-check-circle" 

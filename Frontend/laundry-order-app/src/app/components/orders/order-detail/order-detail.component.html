@@ -1,13 +1,13 @@
 <!-- Design simple et UX friendly -->
 <div class="order-detail-container">
-    <p-toast></p-toast>
-
-    <!-- Header simple avec navigation -->
+    <p-toast></p-toast>    <!-- Header simple avec navigation -->
     <div class="header">
         <button pButton 
                 icon="pi pi-arrow-left" 
                 class="p-button-text back-btn" 
-                routerLink="/orders">
+                (click)="goBack()"
+                pTooltip="Retour"
+                tooltipPosition="right">
         </button>
         <div class="header-info">
             <h1>Commande #{{ order?.id || '...' }}</h1>
@@ -78,15 +78,13 @@
                 <i class="pi pi-inbox"></i>
                 <p>Aucun article</p>
             </div>
-        </div>
-
-        <!-- Actions -->
+        </div>        <!-- Actions -->
         <div class="actions">
             <button pButton 
                     label="Retour" 
                     icon="pi pi-arrow-left"
                     class="p-button-outlined" 
-                    routerLink="/orders">
+                    (click)="goBack()">
             </button>
             <button pButton 
                     label="Imprimer" 

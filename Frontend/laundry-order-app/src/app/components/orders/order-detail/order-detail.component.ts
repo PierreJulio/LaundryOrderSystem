@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { ButtonModule } from 'primeng/button';
@@ -11,6 +11,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
 
 import { OrderService } from '../../../services/order.service';
+import { AuthService } from '../../../services/auth.service';
 import { Order, OrderStatus } from '../../../models/order';
 
 interface TimelineEvent {
@@ -41,21 +42,59 @@ export class OrderDetailComponent implements OnInit {
   order: Order | null = null;
   loading = true;
   events: TimelineEvent[] = [];
+  returnUrl = '/orders'; // URL par défaut
 
   constructor(
     private orderService: OrderService,
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
+    private authService: AuthService,
     private messageService: MessageService
   ) { }
-
   ngOnInit(): void {
+    // Déterminer l'URL de retour en fonction de l'origine
+    this.determineReturnUrl();
+    
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
         this.loadOrder(+id);
       }
     });
+  }
+
+  private determineReturnUrl(): void {
+    // Vérifier s'il y a une URL de retour sauvegardée
+    const savedReturnUrl = sessionStorage.getItem('orderDetailReturnUrl');
+    if (savedReturnUrl) {
+      this.returnUrl = savedReturnUrl;
+      // Nettoyer après utilisation
+      sessionStorage.removeItem('orderDetailReturnUrl');
+      return;
+    }
+
+    // Si l'utilisateur est admin et vient potentiellement du dashboard
+    if (this.authService.isAdmin()) {
+      // Vérifier l'historique de navigation
+      const currentUrl = this.router.url;
+      const referrer = document.referrer;
+      
+      // Si on ne trouve pas d'origine spécifique, utiliser le dashboard admin par défaut pour les admins
+      if (referrer.includes('/admin') || 
+          sessionStorage.getItem('lastAdminPage') === '/admin') {
+        this.returnUrl = '/admin';
+      } else {
+        this.returnUrl = '/orders';
+      }
+    } else {
+      this.returnUrl = '/orders';
+    }
+  }
+
+  goBack(): void {
+    // Utiliser l'URL de retour déterminée
+    this.router.navigate([this.returnUrl]);
   }
   loadOrder(id: number): void {
     this.loading = true;
