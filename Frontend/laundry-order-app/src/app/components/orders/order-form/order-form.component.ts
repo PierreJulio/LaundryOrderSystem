@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 
 import { ButtonModule } from 'primeng/button';
@@ -22,6 +22,7 @@ import { LaundryItem } from '../../../models/laundry-item';
   standalone: true,  imports: [
     CommonModule,
     ReactiveFormsModule,
+    RouterLink,
     ButtonModule,
     CardModule,
     InputTextModule,
