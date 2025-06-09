@@ -106,8 +106,7 @@ namespace LaundryOrderAPI.Services
                 Expiration = tokenResult.Expiration.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
                 Roles = (await _userManager.GetRolesAsync(user)).ToList()
             };
-        }
-          private async Task<TokenResult> GenerateJwtToken(AppUser user)
+        }        private async Task<TokenResult> GenerateJwtToken(AppUser user)
         {
             var userRoles = await _userManager.GetRolesAsync(user);
             
@@ -124,12 +123,28 @@ namespace LaundryOrderAPI.Services
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
             
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"] ?? ""));
+            // Use the same configuration pattern as Program.cs
+            var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET") ?? 
+                         _configuration["Jwt:Key"] ?? 
+                         _configuration["JWT:Secret"] ??
+                         throw new InvalidOperationException("JWT Key not found");
+            
+            var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? 
+                            _configuration["Jwt:Issuer"] ?? 
+                            _configuration["JWT:ValidIssuer"] ?? 
+                            "LaundryOrderAPI";
+            
+            var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? 
+                              _configuration["Jwt:Audience"] ?? 
+                              _configuration["JWT:ValidAudience"] ?? 
+                              "LaundryOrderApp";
+            
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var expiration = DateTime.Now.AddHours(3);
             
             var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidIssuer"],
-                audience: _configuration["JWT:ValidAudience"],
+                issuer: jwtIssuer,
+                audience: jwtAudience,
                 expires: expiration,
                 claims: claims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)

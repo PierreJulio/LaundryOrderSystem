@@ -86,13 +86,20 @@ builder.Services.AddAuthentication(options =>
 {
     options.SaveToken = true;
     options.RequireHttpsMetadata = false;
-    
-    var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET") ?? 
+      var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET") ?? 
                  builder.Configuration["Jwt:Key"] ?? 
+                 builder.Configuration["JWT:Secret"] ??
                  throw new InvalidOperationException("JWT Key not found in configuration or environment variables");
     
-    var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "LaundryOrderAPI";
-    var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "LaundryOrderApp";
+    var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? 
+                    builder.Configuration["Jwt:Issuer"] ?? 
+                    builder.Configuration["JWT:ValidIssuer"] ?? 
+                    "LaundryOrderAPI";
+    
+    var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? 
+                      builder.Configuration["Jwt:Audience"] ?? 
+                      builder.Configuration["JWT:ValidAudience"] ?? 
+                      "LaundryOrderApp";
     
     Console.WriteLine($"[DEBUG] JWT Issuer: {jwtIssuer}");
     Console.WriteLine($"[DEBUG] JWT Audience: {jwtAudience}");
