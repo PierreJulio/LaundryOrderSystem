@@ -1,4 +1,12 @@
 {
+  "version": 2,
+  "framework": "angular",
+  "buildCommand": "npm install --legacy-peer-deps && npx ng build --configuration production",
+  "installCommand": "npm install --legacy-peer-deps",
+  "outputDirectory": "dist/laundry-order-app/browser",
+  "env": {
+    "NODE_VERSION": "18"
+  },
   "rewrites": [
     {
       "source": "/(.*)",
