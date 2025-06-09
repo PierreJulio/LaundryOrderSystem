@@ -19,8 +19,39 @@ builder.Services.AddControllers().AddJsonOptions(options => {
 // Configure DbContext
 if (builder.Environment.IsProduction())
 {
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    Console.WriteLine($"[DEBUG] Connection string from config: '{connectionString}'");
+    
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        // Essayer de récupérer directement depuis les variables d'environnement
+        connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+        Console.WriteLine($"[DEBUG] Connection string from env var: '{connectionString}'");
+    }
+    
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new InvalidOperationException("DATABASE_URL environment variable or connection string not found");
+    }
+    
+    // Convertir le format de connexion URI en chaîne de connexion standard si nécessaire
+    if (connectionString.StartsWith("postgres://") || connectionString.StartsWith("postgresql://"))
+    {
+        // Transformation d'URI en chaîne de connexion conventionnelle
+        var uri = new Uri(connectionString);
+        var userInfo = uri.UserInfo.Split(':');
+        var host = uri.Host;
+        var port = uri.Port;
+        var database = uri.AbsolutePath.TrimStart('/');
+        var user = userInfo[0];
+        var password = userInfo[1];
+        
+        connectionString = $"Host={host};Port={port};Database={database};Username={user};Password={password};SSL Mode=Require;Trust Server Certificate=True";
+        Console.WriteLine($"[DEBUG] Transformed connection string: '{connectionString}'");
+    }
+
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+        options.UseNpgsql(connectionString));
 }
 else
 {
@@ -50,9 +81,12 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-        ValidAudience = builder.Configuration["JWT:ValidAudience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+            builder.Configuration["Jwt:Key"] ?? 
+            Environment.GetEnvironmentVariable("JWT_SECRET") ?? 
+            throw new InvalidOperationException("JWT Key not found in configuration or environment variables")))
     };
 });
 
@@ -64,7 +98,9 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
-        builder => builder.WithOrigins("http://localhost:4200")
+        policy => policy.WithOrigins(
+            builder.Configuration["Cors:AllowedOrigins"]?.Split(',') ?? 
+            new[] { Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "http://localhost:4200" })
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials());

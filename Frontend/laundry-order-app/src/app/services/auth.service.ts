@@ -5,12 +5,13 @@ import { AuthResponse, LoginRequest, RegisterRequest, User } from '../models/use
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { Subject } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService implements OnDestroy {
-  private apiUrl = 'http://localhost:5085/api/auth';
+  private apiUrl = `${environment.apiUrl}/auth`;
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
   private isBrowser: boolean;
