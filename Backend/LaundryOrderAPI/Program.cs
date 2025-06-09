@@ -127,7 +127,7 @@ builder.Services.AddCors(options =>
     var allowedOriginsEnv = Environment.GetEnvironmentVariable("ALLOWED_ORIGINS") ?? 
                            Environment.GetEnvironmentVariable("FRONTEND_URL") ?? 
                            builder.Configuration["Cors:AllowedOrigins"] ?? 
-                           "http://localhost:4200";
+                           "https://laundry-order-system.vercel.app,http://localhost:4200";
     
     var allowedOrigins = allowedOriginsEnv.Split(',', StringSplitOptions.RemoveEmptyEntries)
                                          .Select(origin => origin.Trim())
@@ -137,9 +137,15 @@ builder.Services.AddCors(options =>
     
     options.AddPolicy("AllowSpecificOrigin",
         policy => policy.WithOrigins(allowedOrigins)
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials());
+            .AllowAnyMethod()            .AllowAnyHeader()
+            .AllowCredentials()
+            .SetIsOriginAllowed(origin => 
+            {
+                Console.WriteLine($"[DEBUG] CORS check for origin: {origin}");
+                return allowedOrigins.Contains(origin) || 
+                       origin.StartsWith("http://localhost") ||
+                       origin.StartsWith("https://laundry-order-system.vercel.app");
+            }));
 });
 
 // Add Swagger/OpenAPI
@@ -188,8 +194,35 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 
 app.UseHttpsRedirection();
 
-// Use CORS
+// Use CORS BEFORE error handling
 app.UseCors("AllowSpecificOrigin");
+
+// Global exception handling middleware
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[ERROR] Global exception handler: {ex.Message}");
+        Console.WriteLine($"[ERROR] Stack trace: {ex.StackTrace}");
+          // Ensure CORS headers are present even for errors
+        var origin = context.Request.Headers["Origin"].FirstOrDefault();
+        if (!string.IsNullOrEmpty(origin))
+        {
+            context.Response.Headers["Access-Control-Allow-Origin"] = origin;
+            context.Response.Headers["Access-Control-Allow-Credentials"] = "true";
+        }
+        
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+        
+        var response = new { message = "Internal server error", error = ex.Message };
+        await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(response));
+    }
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
