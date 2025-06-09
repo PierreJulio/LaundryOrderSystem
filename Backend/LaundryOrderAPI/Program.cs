@@ -58,10 +58,16 @@ if (builder.Environment.IsProduction())
             Console.WriteLine($"[ERROR] Failed to parse DATABASE_URL: {ex.Message}");
             throw;
         }
-    }
-
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(connectionString));
+    }    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    {
+        options.UseNpgsql(connectionString);
+        // Ignorer l'avertissement pour les migrations en attente en production
+        if (builder.Environment.IsProduction())
+        {
+            options.ConfigureWarnings(warnings => 
+                warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+        }
+    });
 }
 else
 {

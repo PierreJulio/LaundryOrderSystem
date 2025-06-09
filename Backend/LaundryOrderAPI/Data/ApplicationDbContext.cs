@@ -13,10 +13,14 @@ namespace LaundryOrderAPI.Data
         
         public DbSet<Order> Orders { get; set; }
         public DbSet<LaundryItem> LaundryItems { get; set; }
-        
-        protected override void OnModelCreating(ModelBuilder builder)
+          protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            
+            // Configure decimal precision for PostgreSQL
+            builder.Entity<LaundryItem>()
+                .Property(l => l.Price)
+                .HasPrecision(10, 2); // 10 digits total, 2 decimal places
             
             // Configure relationships
             builder.Entity<Order>()
