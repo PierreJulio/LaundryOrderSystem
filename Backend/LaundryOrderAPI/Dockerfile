@@ -17,5 +17,7 @@ RUN dotnet publish "LaundryOrderAPI.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY entrypoint.sh /app/
+RUN chmod +x /app/entrypoint.sh
 ENV ASPNETCORE_URLS="http://+:8080"
-ENTRYPOINT ["dotnet", "LaundryOrderAPI.dll"]
+ENTRYPOINT ["/app/entrypoint.sh"]

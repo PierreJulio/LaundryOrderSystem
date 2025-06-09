@@ -11,9 +11,7 @@ services:
       - key: FRONTEND_URL
         value: https://votre-app.vercel.app
       - key: DATABASE_URL
-        fromDatabase:
-          name: laundry-db
-          property: connectionString
+        value: postgresql://laundry_sl4l_user:H95YHEGd9zEj59Svshyq4hXvtkgtzoVt@dpg-d13ebep5pdvs73dm4o40-a/laundry_sl4l
 
 databases:
   - name: laundry-db

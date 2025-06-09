@@ -19,14 +19,16 @@ builder.Services.AddControllers().AddJsonOptions(options => {
 // Configure DbContext
 if (builder.Environment.IsProduction())
 {
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    Console.WriteLine($"[DEBUG] Connection string from config: '{connectionString}'");
+    // En production, utiliser directement les variables d'environnement
+    var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+    Console.WriteLine($"[DEBUG] Environment: {builder.Environment.EnvironmentName}");
+    Console.WriteLine($"[DEBUG] Raw DATABASE_URL from env: '{connectionString}'");
     
     if (string.IsNullOrEmpty(connectionString))
     {
-        // Essayer de récupérer directement depuis les variables d'environnement
-        connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
-        Console.WriteLine($"[DEBUG] Connection string from env var: '{connectionString}'");
+        // Fallback vers la configuration si pas de variable d'environnement
+        connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        Console.WriteLine($"[DEBUG] Fallback connection string from config: '{connectionString}'");
     }
     
     if (string.IsNullOrEmpty(connectionString))
@@ -37,17 +39,25 @@ if (builder.Environment.IsProduction())
     // Convertir le format de connexion URI en chaîne de connexion standard si nécessaire
     if (connectionString.StartsWith("postgres://") || connectionString.StartsWith("postgresql://"))
     {
-        // Transformation d'URI en chaîne de connexion conventionnelle
-        var uri = new Uri(connectionString);
-        var userInfo = uri.UserInfo.Split(':');
-        var host = uri.Host;
-        var port = uri.Port;
-        var database = uri.AbsolutePath.TrimStart('/');
-        var user = userInfo[0];
-        var password = userInfo[1];
-        
-        connectionString = $"Host={host};Port={port};Database={database};Username={user};Password={password};SSL Mode=Require;Trust Server Certificate=True";
-        Console.WriteLine($"[DEBUG] Transformed connection string: '{connectionString}'");
+        try
+        {
+            // Transformation d'URI en chaîne de connexion conventionnelle
+            var uri = new Uri(connectionString);
+            var userInfo = uri.UserInfo.Split(':');
+            var host = uri.Host;
+            var port = uri.Port > 0 ? uri.Port : 5432;
+            var database = uri.AbsolutePath.TrimStart('/');
+            var user = userInfo[0];
+            var password = userInfo.Length > 1 ? userInfo[1] : "";
+            
+            connectionString = $"Host={host};Port={port};Database={database};Username={user};Password={password};SSL Mode=Require;Trust Server Certificate=True";
+            Console.WriteLine($"[DEBUG] Transformed connection string: Host={host};Port={port};Database={database};Username={user};Password=***;SSL Mode=Require;Trust Server Certificate=True");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] Failed to parse DATABASE_URL: {ex.Message}");
+            throw;
+        }
     }
 
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -75,18 +85,27 @@ builder.Services.AddAuthentication(options =>
 {
     options.SaveToken = true;
     options.RequireHttpsMetadata = false;
+    
+    var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET") ?? 
+                 builder.Configuration["Jwt:Key"] ?? 
+                 throw new InvalidOperationException("JWT Key not found in configuration or environment variables");
+    
+    var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "LaundryOrderAPI";
+    var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "LaundryOrderApp";
+    
+    Console.WriteLine($"[DEBUG] JWT Issuer: {jwtIssuer}");
+    Console.WriteLine($"[DEBUG] JWT Audience: {jwtAudience}");
+    Console.WriteLine($"[DEBUG] JWT Key length: {jwtKey.Length}");
+    
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-            builder.Configuration["Jwt:Key"] ?? 
-            Environment.GetEnvironmentVariable("JWT_SECRET") ?? 
-            throw new InvalidOperationException("JWT Key not found in configuration or environment variables")))
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
     };
 });
 
@@ -97,10 +116,13 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 // Add CORS
 builder.Services.AddCors(options =>
 {
+    var frontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "http://localhost:4200";
+    var allowedOrigins = builder.Configuration["Cors:AllowedOrigins"]?.Split(',') ?? new[] { frontendUrl };
+    
+    Console.WriteLine($"[DEBUG] CORS allowed origins: {string.Join(", ", allowedOrigins)}");
+    
     options.AddPolicy("AllowSpecificOrigin",
-        policy => policy.WithOrigins(
-            builder.Configuration["Cors:AllowedOrigins"]?.Split(',') ?? 
-            new[] { Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "http://localhost:4200" })
+        policy => policy.WithOrigins(allowedOrigins)
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials());
@@ -140,6 +162,9 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+// Appliquer automatiquement les migrations au démarrage
+await ApplyMigrations(app.Services);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -158,6 +183,48 @@ app.UseAuthorization();
 app.MapControllers();
 await SeedData(app.Services);
 app.Run();
+
+async Task ApplyMigrations(IServiceProvider serviceProvider)
+{
+    using (var scope = serviceProvider.CreateScope())
+    {
+        try
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            Console.WriteLine("[INFO] Checking database connection...");
+            
+            // Test de la connexion
+            await context.Database.CanConnectAsync();
+            Console.WriteLine("[INFO] Database connection successful!");
+            
+            Console.WriteLine("[INFO] Checking for pending migrations...");
+            var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+            
+            if (pendingMigrations.Any())
+            {
+                Console.WriteLine($"[INFO] Found {pendingMigrations.Count()} pending migrations:");
+                foreach (var migration in pendingMigrations)
+                {
+                    Console.WriteLine($"[INFO] - {migration}");
+                }
+                
+                Console.WriteLine("[INFO] Applying migrations...");
+                await context.Database.MigrateAsync();
+                Console.WriteLine("[INFO] Migrations applied successfully!");
+            }
+            else
+            {
+                Console.WriteLine("[INFO] Database is up to date, no migrations needed.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] Database operation failed: {ex.Message}");
+            Console.WriteLine($"[ERROR] Stack trace: {ex.StackTrace}");
+            throw; // Re-throw pour empêcher le démarrage si les migrations échouent
+        }
+    }
+}
 
 async Task SeedData(IServiceProvider serviceProvider)
 {
