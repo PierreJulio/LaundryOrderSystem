@@ -117,8 +117,14 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 // Add CORS
 builder.Services.AddCors(options =>
 {
-    var frontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL") ?? "http://localhost:4200";
-    var allowedOrigins = builder.Configuration["Cors:AllowedOrigins"]?.Split(',') ?? new[] { frontendUrl };
+    var allowedOriginsEnv = Environment.GetEnvironmentVariable("ALLOWED_ORIGINS") ?? 
+                           Environment.GetEnvironmentVariable("FRONTEND_URL") ?? 
+                           builder.Configuration["Cors:AllowedOrigins"] ?? 
+                           "http://localhost:4200";
+    
+    var allowedOrigins = allowedOriginsEnv.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                         .Select(origin => origin.Trim())
+                                         .ToArray();
     
     Console.WriteLine($"[DEBUG] CORS allowed origins: {string.Join(", ", allowedOrigins)}");
     
