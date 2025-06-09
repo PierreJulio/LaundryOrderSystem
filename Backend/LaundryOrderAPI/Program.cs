@@ -17,63 +17,58 @@ builder.Services.AddControllers().AddJsonOptions(options => {
 });
 
 // Configure DbContext
-if (builder.Environment.IsProduction())
+// Check for PostgreSQL connection first (from environment variable or production config)
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+Console.WriteLine($"[DEBUG] Environment: {builder.Environment.EnvironmentName}");
+Console.WriteLine($"[DEBUG] Raw DATABASE_URL from env: '{connectionString}'");
+
+if (string.IsNullOrEmpty(connectionString))
 {
-    // En production, utiliser directement les variables d'environnement
-    var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
-    Console.WriteLine($"[DEBUG] Environment: {builder.Environment.EnvironmentName}");
-    Console.WriteLine($"[DEBUG] Raw DATABASE_URL from env: '{connectionString}'");
-    
-    if (string.IsNullOrEmpty(connectionString))
+    // Fallback vers la configuration si pas de variable d'environnement
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    Console.WriteLine($"[DEBUG] Fallback connection string from config: '{connectionString}'");
+}
+
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("DATABASE_URL environment variable or connection string not found");
+}
+
+// Always use PostgreSQL - convert URI format if needed
+if (connectionString.StartsWith("postgres://") || connectionString.StartsWith("postgresql://"))
+{
+    try
     {
-        // Fallback vers la configuration si pas de variable d'environnement
-        connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-        Console.WriteLine($"[DEBUG] Fallback connection string from config: '{connectionString}'");
-    }
-    
-    if (string.IsNullOrEmpty(connectionString))
-    {
-        throw new InvalidOperationException("DATABASE_URL environment variable or connection string not found");
-    }
-    
-    // Convertir le format de connexion URI en chaîne de connexion standard si nécessaire
-    if (connectionString.StartsWith("postgres://") || connectionString.StartsWith("postgresql://"))
-    {
-        try
-        {
-            // Transformation d'URI en chaîne de connexion conventionnelle
-            var uri = new Uri(connectionString);
-            var userInfo = uri.UserInfo.Split(':');
-            var host = uri.Host;
-            var port = uri.Port > 0 ? uri.Port : 5432;
-            var database = uri.AbsolutePath.TrimStart('/');
-            var user = userInfo[0];
-            var password = userInfo.Length > 1 ? userInfo[1] : "";
+        // Transformation d'URI en chaîne de connexion conventionnelle
+        var uri = new Uri(connectionString);
+        var userInfo = uri.UserInfo.Split(':');
+        var host = uri.Host;
+        var port = uri.Port > 0 ? uri.Port : 5432;
+        var database = uri.AbsolutePath.TrimStart('/');
+        var user = userInfo[0];
+        var password = userInfo.Length > 1 ? userInfo[1] : "";
             
-            connectionString = $"Host={host};Port={port};Database={database};Username={user};Password={password};SSL Mode=Require;Trust Server Certificate=True";
-            Console.WriteLine($"[DEBUG] Transformed connection string: Host={host};Port={port};Database={database};Username={user};Password=***;SSL Mode=Require;Trust Server Certificate=True");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[ERROR] Failed to parse DATABASE_URL: {ex.Message}");
-            throw;
-        }
-    }    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        connectionString = $"Host={host};Port={port};Database={database};Username={user};Password={password};SSL Mode=Require;Trust Server Certificate=True";
+        Console.WriteLine($"[DEBUG] Transformed connection string: Host={host};Port={port};Database={database};Username={user};Password=***;SSL Mode=Require;Trust Server Certificate=True");
+    }
+    catch (Exception ex)
     {
-        options.UseNpgsql(connectionString);
-        // Ignorer l'avertissement pour les migrations en attente en production
-        if (builder.Environment.IsProduction())
-        {
-            options.ConfigureWarnings(warnings => 
-                warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
-        }
-    });
+        Console.WriteLine($"[ERROR] Failed to parse DATABASE_URL: {ex.Message}");
+        throw;
+    }
 }
-else
+
+// Always use PostgreSQL for consistency
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-}
+    options.UseNpgsql(connectionString);
+    // Ignorer l'avertissement pour les migrations en attente en production
+    if (builder.Environment.IsProduction())
+    {
+        options.ConfigureWarnings(warnings => 
+            warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+    }
+});
 
 // Configure Identity
 builder.Services.AddIdentity<AppUser, IdentityRole>()
