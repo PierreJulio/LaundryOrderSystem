@@ -46,25 +46,28 @@ export class RegisterComponent implements OnInit {
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/orders']);
     }
-    
-    this.registerForm = new FormGroup({
-      userName: new FormControl('', [Validators.required]),
+      this.registerForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
       confirmPassword: new FormControl('', [Validators.required]),
-      firstName: new FormControl(''),
-      lastName: new FormControl(''),
+      firstName: new FormControl('', [Validators.required]),
+      lastName: new FormControl('', [Validators.required]),
+      phoneNumber: new FormControl(''),
       acceptTerms: new FormControl(false, [Validators.requiredTrue])
     }, { validators: this.passwordMatchValidator });
   }
 
   ngOnInit(): void {
   }
-
   passwordMatchValidator(g: AbstractControl) {
     if (!g.get('password') || !g.get('confirmPassword')) return null;
     return g.get('password')?.value === g.get('confirmPassword')?.value
       ? null : { 'mismatch': true };
+  }
+
+  toggleAcceptTerms(): void {
+    const currentValue = this.registerForm.get('acceptTerms')?.value;
+    this.registerForm.get('acceptTerms')?.setValue(!currentValue);
   }
 
   onSubmit(): void {
@@ -78,13 +81,13 @@ export class RegisterComponent implements OnInit {
     }
 
     this.loading = true;
-    
-    const registerRequest: RegisterRequest = {
-      userName: this.registerForm.value.userName,
+      const registerRequest: RegisterRequest = {
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
-      firstName: this.registerForm.value.firstName || undefined,
-      lastName: this.registerForm.value.lastName || undefined
+      confirmPassword: this.registerForm.value.confirmPassword,
+      firstName: this.registerForm.value.firstName,
+      lastName: this.registerForm.value.lastName,
+      phoneNumber: this.registerForm.value.phoneNumber || undefined
     };
 
     this.authService.register(registerRequest).subscribe({

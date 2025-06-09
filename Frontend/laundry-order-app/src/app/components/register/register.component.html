@@ -14,18 +14,7 @@
             <p class="welcome-subtitle">Rejoignez notre service de blanchisserie professionnel</p>
         </div>
         
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-            <div class="formgrid grid">
-                <div class="field col-12">
-                    <label for="userName" class="form-label">Nom d'utilisateur</label>
-                    <div class="p-input-wrapper">
-                        <input id="userName" type="text" pInputText formControlName="userName" class="w-full" />
-                    </div>
-                    <small class="p-error" *ngIf="registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched">
-                        Nom d'utilisateur requis
-                    </small>
-                </div>
-                
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">            <div class="formgrid grid">
                 <div class="field col-12">
                     <label for="email" class="form-label">Email</label>
                     <div class="p-input-wrapper">
@@ -40,16 +29,29 @@
                 </div>
                 
                 <div class="field col-6">
-                    <label for="firstName" class="form-label">Prénom (facultatif)</label>
+                    <label for="firstName" class="form-label">Prénom</label>
                     <div class="p-input-wrapper">
                         <input id="firstName" type="text" pInputText formControlName="firstName" class="w-full" />
                     </div>
+                    <small class="p-error" *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched">
+                        Prénom requis
+                    </small>
                 </div>
                 
                 <div class="field col-6">
-                    <label for="lastName" class="form-label">Nom (facultatif)</label>
+                    <label for="lastName" class="form-label">Nom</label>
                     <div class="p-input-wrapper">
                         <input id="lastName" type="text" pInputText formControlName="lastName" class="w-full" />
+                    </div>
+                    <small class="p-error" *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched">
+                        Nom requis
+                    </small>
+                </div>
+                
+                <div class="field col-12">
+                    <label for="phoneNumber" class="form-label">Numéro de téléphone (facultatif)</label>
+                    <div class="p-input-wrapper">
+                        <input id="phoneNumber" type="tel" pInputText formControlName="phoneNumber" class="w-full" />
                     </div>
                 </div>
                 
@@ -78,11 +80,10 @@
                         Les mots de passe ne correspondent pas
                     </small>
                 </div>
-                
-                <div class="field col-12 mt-4">
-                    <div class="flex align-items-center">
+                  <div class="field col-12 mt-4">
+                    <div class="flex align-items-center cursor-pointer" (click)="toggleAcceptTerms()">
                         <p-checkbox id="acceptTerms" formControlName="acceptTerms" [binary]="true" styleClass="mr-2"></p-checkbox>
-                        <label for="acceptTerms" class="terms-label">J'accepte les conditions générales d'utilisation</label>
+                        <span class="terms-label">J'accepte les conditions générales d'utilisation</span>
                     </div>
                     <small class="p-error" *ngIf="registerForm.get('acceptTerms')?.invalid && registerForm.get('acceptTerms')?.touched">
                         Vous devez accepter les conditions d'utilisation

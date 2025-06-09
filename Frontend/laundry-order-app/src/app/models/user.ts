@@ -15,11 +15,12 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-    userName: string;
     email: string;
     password: string;
-    firstName?: string;
-    lastName?: string;
+    confirmPassword: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber?: string;
 }
 
 export interface AuthResponse {
