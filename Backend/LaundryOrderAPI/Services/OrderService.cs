@@ -95,14 +95,13 @@ namespace LaundryOrderAPI.Services
                 
             if (order == null)
                 return null;
-                
-            order.Status = updateDto.Status;
+                  order.Status = updateDto.Status;
             if (!string.IsNullOrEmpty(updateDto.Reason))
             {
                 order.Reason = updateDto.Reason;
             }
             
-            order.UpdatedAt = DateTime.Now;
+            order.UpdatedAt = DateTime.UtcNow;
             
             await _context.SaveChangesAsync();
             

@@ -7,9 +7,10 @@ services:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
       - key: JWT_SECRET
-        generateValue: true
-      - key: FRONTEND_URL
-        value: https://votre-app.vercel.app
+        generateValue: true      - key: FRONTEND_URL
+        value: https://laundry-order-system.vercel.app
+      - key: ALLOWED_ORIGINS
+        value: https://laundry-order-system.vercel.app,http://localhost:4200
       - key: DATABASE_URL
         value: postgresql://laundry_sl4l_user:H95YHEGd9zEj59Svshyq4hXvtkgtzoVt@dpg-d13ebep5pdvs73dm4o40-a/laundry_sl4l
 

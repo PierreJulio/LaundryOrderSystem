@@ -13,11 +13,10 @@ namespace LaundryOrderAPI.Models
     }
 
     public class Order
-    {
-        public Order()
+    {        public Order()
         {
             LaundryItems = new List<LaundryItem>();
-            CreatedAt = DateTime.Now;
+            CreatedAt = DateTime.UtcNow;
             Status = OrderStatus.Pending;
         }
 
