@@ -6,6 +6,7 @@ import { providePrimeNG } from 'primeng/config';
 import Lara from '@primeng/themes/lara';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { authErrorInterceptor } from './services/interceptor/auth-error-interceptor.service';
 
 // Create the auth interceptor function that respects SSR environment
 function authInterceptor(req: any, next: any) {
@@ -29,10 +30,9 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideClientHydration(withEventReplay()),
-    provideHttpClient(
+    provideClientHydration(withEventReplay()),    provideHttpClient(
       withFetch(),
-      withInterceptors([authInterceptor])
+      withInterceptors([authInterceptor, authErrorInterceptor])
     ),
     provideAnimations(),
     providePrimeNG({ 

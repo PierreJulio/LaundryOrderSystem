@@ -34,16 +34,15 @@ namespace LaundryOrderAPI.DTO
         
         [Required]
         public string Password { get; set; }
-    }
-    
-    public class UserResponseDto
+    }    public class UserResponseDto
     {
-        public string Id { get; set; }
-        public string Email { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Token { get; set; }
-        public List<string> Roles { get; set; }
+        public required string Id { get; set; }
+        public required string Email { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? PhoneNumber { get; set; }
+        public required string Token { get; set; }
+        public required string Expiration { get; set; }
+        public required List<string> Roles { get; set; }
     }
 }

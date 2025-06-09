@@ -25,8 +25,7 @@ import { User } from './models/user';
 export class AppComponent implements OnInit {
   title = 'laundry-order-app';
   items: MenuItem[] = [];
-  currentUser: User | null = null;
-  constructor(
+  currentUser: User | null = null;  constructor(
     public authService: AuthService,
     private router: Router
   ) { }

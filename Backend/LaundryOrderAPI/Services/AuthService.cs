@@ -18,6 +18,12 @@ namespace LaundryOrderAPI.Services
         Task<UserResponseDto> RegisterAsync(UserRegisterDto registerDto);
         Task<UserResponseDto> LoginAsync(UserLoginDto loginDto);
     }
+
+    public class TokenResult
+    {
+        public string Token { get; set; } = string.Empty;
+        public DateTime Expiration { get; set; }
+    }
     
     public class AuthService : IAuthService
     {
@@ -58,21 +64,21 @@ namespace LaundryOrderAPI.Services
             // Check if "User" role exists, if not create it
             if (!await _roleManager.RoleExistsAsync("User"))
                 await _roleManager.CreateAsync(new IdentityRole("User"));
-                
-            // Add the user to "User" role
+                  // Add the user to "User" role
             await _userManager.AddToRoleAsync(user, "User");
             
             // Create JWT token
-            var token = await GenerateJwtToken(user);
+            var tokenResult = await GenerateJwtToken(user);
             
             return new UserResponseDto
             {
                 Id = user.Id,
-                Email = user.Email,
+                Email = user.Email ?? "",
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 PhoneNumber = user.PhoneNumber,
-                Token = token,
+                Token = tokenResult.Token,
+                Expiration = tokenResult.Expiration.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
                 Roles = (await _userManager.GetRolesAsync(user)).ToList()
             };
         }
@@ -86,31 +92,30 @@ namespace LaundryOrderAPI.Services
             var isPasswordValid = await _userManager.CheckPasswordAsync(user, loginDto.Password);
             if (!isPasswordValid)
                 return null;
-                
-            // Create JWT token
-            var token = await GenerateJwtToken(user);
+                  // Create JWT token
+            var tokenResult = await GenerateJwtToken(user);
             
             return new UserResponseDto
             {
                 Id = user.Id,
-                Email = user.Email,
+                Email = user.Email ?? "",
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 PhoneNumber = user.PhoneNumber,
-                Token = token,
+                Token = tokenResult.Token,
+                Expiration = tokenResult.Expiration.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
                 Roles = (await _userManager.GetRolesAsync(user)).ToList()
             };
         }
-        
-        private async Task<string> GenerateJwtToken(AppUser user)
+          private async Task<TokenResult> GenerateJwtToken(AppUser user)
         {
             var userRoles = await _userManager.GetRolesAsync(user);
             
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.UserName ?? ""),
+                new Claim(ClaimTypes.Email, user.Email ?? ""),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
             
@@ -119,17 +124,22 @@ namespace LaundryOrderAPI.Services
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
             
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"] ?? ""));
+            var expiration = DateTime.Now.AddHours(3);
             
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddHours(3),
+                expires: expiration,
                 claims: claims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );
             
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new TokenResult
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = expiration
+            };
         }
     }
 }

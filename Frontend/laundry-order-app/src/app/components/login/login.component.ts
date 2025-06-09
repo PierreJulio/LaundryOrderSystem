@@ -56,8 +56,17 @@ export class LoginComponent implements OnInit {
     
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/orders';
   }
-
   ngOnInit(): void {
+    // Vérifier s'il y a un message d'expiration de session
+    const message = this.route.snapshot.queryParams['message'];
+    if (message) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Session expirée',
+        detail: message,
+        life: 5000
+      });
+    }
   }
   onSubmit(): void {
     if (this.loginForm.invalid) {

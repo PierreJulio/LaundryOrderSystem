@@ -5,6 +5,7 @@ export interface User {
     firstName?: string;
     lastName?: string;
     token?: string;
+    tokenExpiration?: string;
     roles?: string[];
 }
 
