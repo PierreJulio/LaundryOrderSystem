@@ -14,7 +14,12 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'orders/new', component: OrderFormComponent, canActivate: [AuthGuard] },
   { path: 'orders', component: OrderListComponent, canActivate: [AuthGuard] },
-  { path: 'orders/:id', component: OrderDetailComponent, canActivate: [AuthGuard] },
+  { 
+    path: 'orders/:id', 
+    component: OrderDetailComponent, 
+    canActivate: [AuthGuard],
+    data: { prerender: false }
+  },
   { path: 'admin', component: AdminDashboardComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] } },
   { path: 'admin/validation', component: OrderValidationComponent, canActivate: [AuthGuard], data: { roles: ['Admin'] } },
   { path: '**', redirectTo: '/login' }
