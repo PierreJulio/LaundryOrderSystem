@@ -2,7 +2,7 @@
   "version": 2,
   "framework": null,
   "buildCommand": "npm install && npm run build",
-  "outputDirectory": "dist/laundry-order-app/browser",
+  "outputDirectory": "dist/laundry-order-app",
   "installCommand": "npm install",
   "env": {
     "NODE_VERSION": "18",
