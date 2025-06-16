@@ -47,12 +47,14 @@
                         Nom requis
                     </small>
                 </div>
-                
-                <div class="field col-12">
-                    <label for="phoneNumber" class="form-label">Numéro de téléphone (facultatif)</label>
+                  <div class="field col-12">
+                    <label for="phoneNumber" class="form-label">Numéro de téléphone</label>
                     <div class="p-input-wrapper">
                         <input id="phoneNumber" type="tel" pInputText formControlName="phoneNumber" class="w-full" />
                     </div>
+                    <small class="p-error" *ngIf="registerForm.get('phoneNumber')?.invalid && registerForm.get('phoneNumber')?.touched">
+                        Numéro de téléphone requis
+                    </small>
                 </div>
                 
                 <div class="field col-12">

@@ -45,14 +45,14 @@ export class RegisterComponent implements OnInit {
     // Redirect to home if already logged in
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/orders']);
-    }
-      this.registerForm = new FormGroup({
+    }    
+    this.registerForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
       confirmPassword: new FormControl('', [Validators.required]),
       firstName: new FormControl('', [Validators.required]),
       lastName: new FormControl('', [Validators.required]),
-      phoneNumber: new FormControl(''),
+      phoneNumber: new FormControl('', [Validators.required]),
       acceptTerms: new FormControl(false, [Validators.requiredTrue])
     }, { validators: this.passwordMatchValidator });
   }
