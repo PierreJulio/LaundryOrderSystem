@@ -10,7 +10,7 @@
     font-weight: 700;
   }
 
-  // Conteneur pour les cartes de statistiques - 5 cartes sur une ligne
+  // Conteneur pour les cartes de statistiques
   .stats-cards-container {
     display: flex;
     gap: 1rem;
@@ -39,7 +39,9 @@
         min-width: 100%;
       }
     }
-  }  // Styles pour les cartes de statistiques
+  }
+
+  // Styles pour les cartes de statistiques
   .p-card {
     transition: transform 0.2s, box-shadow 0.2s;
     background: white;
@@ -77,14 +79,18 @@
       letter-spacing: 0.025em;
       transition: color 0.3s ease;
     }
-  }  // Couleurs spécifiques pour chaque type de carte
-  .stat-card:nth-child(1) .stat-number { color: #3b82f6; } // Total - Bleu
-  .stat-card:nth-child(2) .stat-number { color: #f59e0b; } // En attente - Orange
-  .stat-card:nth-child(3) .stat-number { color: #10b981; } // Approuvées - Vert
-  .stat-card:nth-child(4) .stat-number { color: #ef4444; } // Rejetées - Rouge
-  .stat-card:nth-child(5) .stat-number { color: #3b82f6; } // Terminées - Bleu  // Styles pour les cartes de filtre actives
+  }
+
+  // Couleurs spécifiques pour chaque type de carte
+  .stat-card:nth-child(1) .stat-number { color: #3b82f6; }
+  .stat-card:nth-child(2) .stat-number { color: #f59e0b; }
+  .stat-card:nth-child(3) .stat-number { color: #10b981; }
+  .stat-card:nth-child(4) .stat-number { color: #ef4444; }
+  .stat-card:nth-child(5) .stat-number { color: #3b82f6; }
+
+  // Styles pour les cartes de filtre actives
   .filter-active {
-    background-color: #dbeafe; // Bleu très clair
+    background-color: #dbeafe;
     border-color: #3b82f6;
     border-width: 2px;
     transform: translateY(-2px);
@@ -92,18 +98,20 @@
     
     .stat-card {
       .stat-number {
-        color: #1e40af; // Bleu foncé pour excellent contraste
+        color: #1e40af;
         font-weight: 800;
         font-size: 2.2rem;
       }
       .stat-label {
-        color: #1e3a8a; // Bleu très foncé
+        color: #1e3a8a;
         font-weight: 700;
         text-transform: uppercase;
       }
     }
-  }  .filter-active-pending {
-    background-color: #fef3c7; // Orange très clair
+  }
+
+  .filter-active-pending {
+    background-color: #fef3c7;
     border-color: #f59e0b;
     border-width: 2px;
     transform: translateY(-2px);
@@ -111,19 +119,20 @@
     
     .stat-card {
       .stat-number {
-        color: #92400e; // Orange foncé pour excellent contraste
+        color: #92400e;
         font-weight: 800;
         font-size: 2.2rem;
       }
       .stat-label {
-        color: #78350f; // Orange très foncé
+        color: #78350f;
         font-weight: 700;
         text-transform: uppercase;
       }
     }
   }
+
   .filter-active-approved {
-    background-color: #d1fae5; // Vert très clair
+    background-color: #d1fae5;
     border-color: #10b981;
     border-width: 2px;
     transform: translateY(-2px);
@@ -131,19 +140,20 @@
     
     .stat-card {
       .stat-number {
-        color: #065f46; // Vert foncé pour excellent contraste
+        color: #065f46;
         font-weight: 800;
         font-size: 2.2rem;
       }
       .stat-label {
-        color: #064e3b; // Vert très foncé
+        color: #064e3b;
         font-weight: 700;
         text-transform: uppercase;
       }
     }
   }
+
   .filter-active-rejected {
-    background-color: #fee2e2; // Rouge très clair
+    background-color: #fee2e2;
     border-color: #ef4444;
     border-width: 2px;
     transform: translateY(-2px);
@@ -151,19 +161,20 @@
     
     .stat-card {
       .stat-number {
-        color: #991b1b; // Rouge foncé pour excellent contraste
+        color: #991b1b;
         font-weight: 800;
         font-size: 2.2rem;
       }
       .stat-label {
-        color: #7f1d1d; // Rouge très foncé
+        color: #7f1d1d;
         font-weight: 700;
         text-transform: uppercase;
       }
     }
   }
+
   .filter-active-completed {
-    background-color: #dbeafe; // Bleu très clair
+    background-color: #dbeafe;
     border-color: #3b82f6;
     border-width: 2px;
     transform: translateY(-2px);
@@ -171,19 +182,19 @@
     
     .stat-card {
       .stat-number {
-        color: #1e40af; // Bleu foncé pour excellent contraste
+        color: #1e40af;
         font-weight: 800;
         font-size: 2.2rem;
       }
       .stat-label {
-        color: #1e3a8a; // Bleu très foncé
+        color: #1e3a8a;
         font-weight: 700;
         text-transform: uppercase;
       }
     }
   }
 
-  // === STYLES POUR LE GRAPHIQUE ===
+  // Styles pour le graphique
   .chart-container {
     min-height: 300px !important;
     background: #ffffff !important;
@@ -200,7 +211,7 @@
     }
   }
 
-  // === STYLES POUR LES BOUTONS DE FILTRE ===
+  // Styles pour les boutons de filtre
   .filter-buttons .p-button {
     margin-right: 0.5rem !important;
     margin-bottom: 0.5rem !important;
@@ -274,7 +285,7 @@
     }
   }
 
-  // === STYLES POUR LE TABLEAU ===
+  // Styles pour le tableau
   .p-datatable {
     background: #ffffff !important;
     border: 1px solid #e5e7eb !important;
@@ -321,7 +332,8 @@
           background-color: #f9fafb !important;
         }
       }
-        &:nth-child(even) {
+
+      &:nth-child(even) {
         background-color: #fafafa !important;
         
         > td {
@@ -339,19 +351,20 @@
     }
   }
 
-  // === STYLES POUR LA PAGINATION ===
+  // Styles pour la pagination
   .p-paginator {
     background: #ffffff !important;
     border: none !important;
     padding: 1rem !important;
-    border-top: 1px solid #e5e7eb !important;      .p-paginator-current {
+    border-top: 1px solid #e5e7eb !important;
+
+    .p-paginator-current {
       background: transparent !important;
       color: #374151 !important;
       font-weight: 500 !important;
       font-size: 0.875rem !important;
     }
     
-    // Styles pour le dropdown de sélection du nombre d'éléments par page
     .p-dropdown {
       background: #ffffff !important;
       border: 1px solid #d1d5db !important;
@@ -418,7 +431,7 @@
     }
   }
 
-  // === STYLES POUR LES TAGS DE STATUT ===
+  // Styles pour les tags de statut
   .p-tag {
     font-weight: 600 !important;
     padding: 0.5rem 0.75rem !important;
@@ -452,7 +465,7 @@
     }
   }
 
-  // === STYLES POUR LE TOAST ===
+  // Styles pour le toast
   .p-toast {
     z-index: 9999 !important;
   }

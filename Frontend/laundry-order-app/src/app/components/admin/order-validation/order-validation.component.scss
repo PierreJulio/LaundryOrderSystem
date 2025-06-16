@@ -1,13 +1,9 @@
-/* Styles modernes pour la popup de validation */
 
-// Variables CSS pour la cohérence
 :host {
   --validation-primary: #667eea;
   --validation-secondary: #764ba2;
   --validation-success: #10b981;
-  --validation-warning: #f59e0b;
   --validation-danger: #ef4444;
-  --validation-info: #3b82f6;
   --validation-light: #f8fafc;
   --validation-border: #e2e8f0;
   --validation-text: #1e293b;
@@ -16,7 +12,6 @@
   --validation-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Styles pour la dialog moderne */
 ::ng-deep .modern-validation-dialog {
   .p-dialog {
     border-radius: 20px !important;
@@ -32,42 +27,6 @@
     background: white !important;
   }
 
-  /* Améliorations supplémentaires pour les couleurs */
-  /* Styles pour les boutons dans la dialog */
-  .p-button {
-    &.cancel-btn {
-      background: white !important;
-      border: 2px solid #e2e8f0 !important;
-      color: #1e293b !important;
-
-      &:hover:not(:disabled) {
-        background: #f8fafc !important;
-        border-color: #64748b !important;
-      }
-    }
-
-    &.confirm-btn {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-      border: none !important;
-      color: white !important;
-
-      &:hover:not(:disabled) {
-        background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
-      }
-    }
-
-    &.close-btn {
-      background: rgba(255, 255, 255, 0.2) !important;
-      border: 1px solid rgba(255, 255, 255, 0.3) !important;
-      color: white !important;
-
-      &:hover:not(:disabled) {
-        background: rgba(255, 255, 255, 0.3) !important;
-      }
-    }
-  }
-
-  /* Styles pour le dropdown */
   .p-dropdown {
     border: 2px solid #e2e8f0 !important;
     border-radius: 12px !important;
@@ -91,7 +50,6 @@
     }
   }
 
-  /* Styles pour le textarea */
   .p-inputtextarea {
     border: 2px solid #e2e8f0 !important;
     border-radius: 12px !important;
@@ -107,7 +65,6 @@
   }
 }
 
-/* Contenu principal de la dialog */
 .validation-dialog-content {
   display: flex;
   flex-direction: column;
@@ -115,7 +72,6 @@
   background: white;
 }
 
-/* Header avec gradient moderne */
 .dialog-header {
   background: linear-gradient(135deg, var(--validation-primary) 0%, var(--validation-secondary) 100%);
   color: white;
@@ -191,7 +147,6 @@
   }
 }
 
-/* Corps de la dialog */
 .dialog-body {
   flex: 1;
   padding: 2rem;
@@ -201,7 +156,6 @@
   background: var(--validation-light);
 }
 
-/* Cartes de contenu */
 .order-summary-card,
 .articles-card,
 .validation-form-card {
@@ -218,7 +172,6 @@
   }
 }
 
-/* Headers des sections */
 .summary-header,
 .articles-header,
 .form-header {
@@ -242,7 +195,6 @@
   }
 }
 
-/* Grille d'informations de commande */
 .order-info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -287,7 +239,6 @@
   }
 }
 
-/* Liste des articles */
 .articles-list {
   display: flex;
   flex-direction: column;
@@ -346,7 +297,6 @@
   }
 }
 
-/* Formulaire de validation */
 .validation-form {
   display: flex;
   flex-direction: column;
@@ -373,49 +323,6 @@
   }
 }
 
-/* Styles pour les éléments de formulaire PrimeNG */
-::ng-deep {
-  .modern-dropdown {
-    .p-dropdown {
-      border: 2px solid var(--validation-border) !important;
-      border-radius: 12px !important;
-      transition: all 0.3s ease !important;
-
-      &:hover {
-        border-color: var(--validation-primary) !important;
-      }
-
-      &.p-focus {
-        border-color: var(--validation-primary) !important;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
-      }
-    }
-  }
-
-  .modern-textarea {
-    border: 2px solid var(--validation-border) !important;
-    border-radius: 12px !important;
-    padding: 1rem !important;
-    transition: all 0.3s ease !important;
-    font-family: inherit !important;
-
-    &:hover {
-      border-color: var(--validation-primary) !important;
-    }
-
-    &:focus {
-      border-color: var(--validation-primary) !important;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
-    }
-
-    &::placeholder {
-      color: var(--validation-text-light) !important;
-      font-style: italic !important;
-    }
-  }
-}
-
-/* Footer avec boutons modernes */
 .dialog-footer {
   padding: 1.5rem 2rem;
   background: white;
@@ -457,7 +364,9 @@
       background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
       transform: translateY(-2px) !important;
       box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4) !important;
-    }    &:disabled {
+    }
+
+    &:disabled {
       background: #9ca3af !important;
       box-shadow: none !important;
       cursor: not-allowed !important;
@@ -467,9 +376,8 @@
   }
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
-  ::ng-deep .modern-validation-dialog .p_dialog {
+  ::ng-deep .modern-validation-dialog .p-dialog {
     width: 95vw !important;
     max-width: none !important;
     margin: 1rem !important;
@@ -501,104 +409,5 @@
     .confirm-btn {
       width: 100% !important;
     }
-  }
-}
-
-/* Animations d'entrée */
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-::ng-deep .modern-validation-dialog .p_dialog {
-  animation: fadeInScale 0.3s ease-out !important;
-}
-
-/* Amélioration des couleurs des icônes */
-.header-icon i {
-  color: white !important;
-  font-size: 2rem !important;
-  background: rgba(255, 255, 255, 0.2) !important;
-  width: 60px !important;
-  height: 60px !important;
-  border-radius: 50% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.summary-header i,
-.articles-header i,
-.form-header i {
-  color: #667eea !important;
-  background: rgba(102, 126, 234, 0.1) !important;
-  width: 40px !important;
-  height: 40px !important;
-  border-radius: 50% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.article-icon i {
-  color: #10b981 !important;
-  background: rgba(16, 185, 129, 0.1) !important;
-  width: 32px !important;
-  height: 32px !important;
-  border-radius: 50% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-/* Correction des couleurs de texte */
-.order-info-grid .info-item {
-  .label {
-    color: #64748b !important;
-    font-weight: 600 !important;
-  }
-
-  .value {
-    color: #1e293b !important;
-    font-weight: 500 !important;
-
-    &.reason,
-    &.comment {
-      background: #f8fafc !important;
-      color: #475569 !important;
-      font-style: italic !important;
-    }
-  }
-}
-
-.articles-list .article-item {
-  .article-name {
-    color: #1e293b !important;
-    font-weight: 600 !important;
-  }
-
-  .article-quantity {
-    color: #64748b !important;
-  }
-
-  .article-price {
-    color: #10b981 !important;
-    font-weight: 600 !important;
-  }
-}
-
-.modern-label {
-  color: #1e293b !important;
-  font-weight: 600 !important;
-
-  i {
-    color: #667eea !important;
-    margin-right: 0.5rem !important;
   }
 }
